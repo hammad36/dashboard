@@ -12,7 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prices = $_POST['price'];
     $totalPrice = $_POST['totalPrice']; // Get total price from form input
 
-    // Begin transaction
     mysqli_begin_transaction($conn);
 
     try {
@@ -62,12 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Commit transaction
         mysqli_commit($conn);
         header("Location: ilist.php?edit=Data Updated successfully");
         exit();
     } catch (Exception $e) {
-        // Rollback transaction
         mysqli_rollback($conn);
         echo '<p class="description text-center">Failed to update invoice: ' . $e->getMessage() . '</p>';
     }
@@ -226,7 +223,6 @@ while ($row = mysqli_fetch_assoc($existingProductResult)) {
 
                     productDetails.appendChild(container);
 
-                    // Update total price
                     const quantityInput = container.querySelector(`#quantity_${productId}`);
                     quantityInput.addEventListener('input', function() {
                         updateTotalPrice();
@@ -252,7 +248,6 @@ while ($row = mysqli_fetch_assoc($existingProductResult)) {
                 totalPriceInput.value = totalPrice.toFixed(2);
             }
 
-            // Initial total price calculation
             updateTotalPrice();
         });
     </script>

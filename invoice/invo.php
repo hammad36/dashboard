@@ -17,7 +17,6 @@ $lastInvoiceNumber = $row['max_invoice_number'];
 $newInvoiceNumber = $lastInvoiceNumber ? $lastInvoiceNumber + 1 : 1;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Form has been submitted
     $invoiceNumber = $_POST['invoiceNumber'];
     $invoiceDate = date('Y-m-d');
     $clientName = $_POST['clientName'];
@@ -27,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prices = $_POST['price'];
     $totalAmount = $_POST['totalPrice'];
 
-    // Begin transaction
     mysqli_begin_transaction($conn);
 
     try {
@@ -203,7 +201,6 @@ mysqli_close($conn);
 
                     productDetails.appendChild(container);
 
-                    // Update total price
                     const quantityInput = container.querySelector(`#quantity_${productId}`);
                     quantityInput.addEventListener('input', function() {
                         updateTotalPrice();
