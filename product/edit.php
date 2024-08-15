@@ -21,6 +21,7 @@ if (isset($_POST['submit'])) {
         echo "Failed: " . mysqli_error($conn);
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -50,6 +51,9 @@ if (isset($_POST['submit'])) {
         $sql = "SELECT * FROM `product` WHERE pro_id = $id LIMIT 1";
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($result);
+
+        $dbConnection->close();
+
         ?>
 
         <form action="" method="post">

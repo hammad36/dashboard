@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo '<p class="description text-center">Failed to create invoice: ' . $e->getMessage() . '</p>';
     }
 }
-mysqli_close($conn);
+$dbConnection->close();
 ?>
 
 

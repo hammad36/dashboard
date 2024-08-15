@@ -161,7 +161,6 @@ while ($row = mysqli_fetch_assoc($existingProductResult)) {
                         $productQuery = "SELECT pro_name, pro_price FROM Product WHERE pro_id = '$productId' LIMIT 1";
                         $productResult = mysqli_query($conn, $productQuery);
                         $productRow = mysqli_fetch_assoc($productResult);
-
                         echo '<div class="row">
                                 <div class="column">
                                     <label for="quantity_' . $productId . '">' . $productRow['pro_name'] . ' Quantity</label>
@@ -173,6 +172,7 @@ while ($row = mysqli_fetch_assoc($existingProductResult)) {
                                 </div>
                             </div>';
                     }
+                    $dbConnection->close();
                     ?>
                 </div>
             </div>

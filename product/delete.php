@@ -1,14 +1,6 @@
 <?php
 include "../DB/Connection.php";
-$dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
-$conn = $dbConnection->getConnection();
+include "../Delete.php";
 
-$id = intval($_GET['id']);
-$sql = "DELETE FROM `product` WHERE `pro_id` = $id";
-$result = mysqli_query($conn, $sql);
-if ($result) {
-    header("Location: plist.php?remove=Record deleted successfully");
-    exit();
-} else {
-    echo "Failed: " . mysqli_error($conn);
-}
+$handler = new Delete('localhost', 'hammad', 'My@2530', 'dash');
+$handler->deleteRecord('product', 'pro_id', $_GET['id'], 'plist.php');

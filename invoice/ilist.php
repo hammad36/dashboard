@@ -93,7 +93,7 @@
                     </tr>
                 <?php
                 }
-                mysqli_close($conn);
+                $dbConnection->close();
                 ?>
             </tbody>
         </table>

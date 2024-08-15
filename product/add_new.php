@@ -20,6 +20,8 @@ if (isset($_POST['submit'])) {
         echo "Failed: " . mysqli_error($conn);
     }
 }
+$dbConnection->close();
+
 ?>
 
 <!DOCTYPE html>

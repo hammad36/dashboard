@@ -1,15 +1,6 @@
-
 <?php
 include "../DB/Connection.php";
-$dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
-$conn = $dbConnection->getConnection();
+include "../Delete.php";
 
-$id = intval($_GET['inv_number']);
-$sql = "DELETE FROM `Invoice` WHERE `inv_number` = $id";
-$result = mysqli_query($conn, $sql);
-if ($result) {
-    header("Location: ilist.php?remove=Record deleted successfully");
-    exit();
-} else {
-    echo "Failed: " . mysqli_error($conn);
-}
+$handler = new Delete('localhost', 'hammad', 'My@2530', 'dash');
+$handler->deleteRecord('Invoice', 'inv_number', $_GET['inv_number'], 'ilist.php');
