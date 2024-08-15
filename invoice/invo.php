@@ -1,5 +1,5 @@
 <?php
-include "../DBClasses/Connection.php";
+include "../DB/Connection.php";
 $dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
 $conn = $dbConnection->getConnection();
 
@@ -100,7 +100,7 @@ mysqli_close($conn);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create New Invoice</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
@@ -164,6 +164,6 @@ mysqli_close($conn);
         </form>
     </div>
 
-    <script src="index.js"></script>
+    <script src="js/invo.js"></script>
 
 </body>

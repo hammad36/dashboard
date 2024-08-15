@@ -1,6 +1,6 @@
 
 <?php
-include "../DBClasses/Connection.php";
+include "../DB/Connection.php";
 $dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
 $conn = $dbConnection->getConnection();
 

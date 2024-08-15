@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <title>Add New Product</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
@@ -67,7 +67,7 @@
             </thead>
             <tbody>
                 <?php
-                include "../DBClasses/Connection.php";
+                include "../DB/Connection.php";
                 $dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
                 $conn = $dbConnection->getConnection();
 
