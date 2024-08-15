@@ -1,5 +1,8 @@
 <?php
-include("../conn.php");
+include "../DBClasses/Connection.php";
+$dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
+$conn = $dbConnection->getConnection();
+
 $id = $_GET['inv_number'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

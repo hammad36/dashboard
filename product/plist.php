@@ -67,7 +67,9 @@
             </thead>
             <tbody>
                 <?php
-                include "../conn.php";
+                include "../DBClasses/Connection.php";
+                $dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
+                $conn = $dbConnection->getConnection();
 
                 $sql = "SELECT * FROM product";
                 $result = mysqli_query($conn, $sql);
@@ -88,7 +90,9 @@
                             </a>
                         </td>
                     </tr>
-                <?php } ?>
+                <?php }
+                $dbConnection->close();
+                ?>
 
             </tbody>
         </table>

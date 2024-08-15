@@ -1,5 +1,7 @@
 <?php
-include("../conn.php");
+include "../DBClasses/Connection.php";
+$dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
+$conn = $dbConnection->getConnection();
 
 // Fetch products from the database and calculate the total sold quantity for each product
 $productQuery = "SELECT p.pro_id, p.pro_name, p.pro_price, p.pro_quantity, 

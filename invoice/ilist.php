@@ -63,7 +63,9 @@
 
             <tbody>
                 <?php
-                include("../conn.php");
+                include "../DBClasses/Connection.php";
+                $dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
+                $conn = $dbConnection->getConnection();
 
                 $sql = "SELECT inv.inv_number, inv.inv_date, inv.client_name, inv.client_email, 
                         SUM(ip.quantity) AS total_quantity, inv.total_amount

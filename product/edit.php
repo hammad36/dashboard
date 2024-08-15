@@ -1,7 +1,9 @@
 <?php
-include("../conn.php");
-$id = intval($_GET['id']);
+include "../DBClasses/Connection.php";
+$dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
+$conn = $dbConnection->getConnection();
 
+$id = intval($_GET['id']);
 if (isset($_POST['submit'])) {
     $productName = $_POST['pro_name'];
     $description = $_POST['description'];

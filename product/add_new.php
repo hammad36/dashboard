@@ -1,5 +1,7 @@
 <?php
-include("../conn.php");
+include "../DBClasses/Connection.php";
+$dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
+$conn = $dbConnection->getConnection();
 
 if (isset($_POST['submit'])) {
     $productName = $_POST['pro_name'];
