@@ -1,5 +1,7 @@
 <?php
 include "../DB/Connection.php";
+include "./productClasses/productAdd.php";
+
 $dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
 $conn = $dbConnection->getConnection();
 
@@ -7,18 +9,10 @@ if (isset($_POST['submit'])) {
     $productName = $_POST['pro_name'];
     $description = $_POST['description'];
     $quantity = $_POST['pro_quantity'];
-    $Price = $_POST['pro_price'];
+    $price = $_POST['pro_price'];
 
-    $sql = "INSERT INTO `product`(`pro_name`, `description`, `pro_price`, `pro_quantity`) 
-            VALUES ('$productName', '$description', '$Price', '$quantity')";
-
-    $result = mysqli_query($conn, $sql);
-
-    if ($result) {
-        header("Location: plist.php?add=New record created successfully");
-    } else {
-        echo "Failed: " . mysqli_error($conn);
-    }
+    $productAdd = new productAdd($conn);
+    $productAdd->addProduct($productName, $description, $quantity, $price);
 }
 $dbConnection->close();
 

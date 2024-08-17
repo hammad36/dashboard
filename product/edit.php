@@ -1,27 +1,28 @@
 <?php
 include "../DB/Connection.php";
+include "./productClasses/productAdd.php";
+include "./productClasses/productUpdate.php";
+include "./productClasses/productRetrieve.php";
+
 $dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
 $conn = $dbConnection->getConnection();
-
 $id = intval($_GET['id']);
+
 if (isset($_POST['submit'])) {
     $productName = $_POST['pro_name'];
     $description = $_POST['description'];
     $quantity = $_POST['pro_quantity'];
-    $Price = $_POST['pro_price'];
+    $price = $_POST['pro_price'];
 
-    $sql = "UPDATE `product` SET `pro_name`='$productName', `description`='$description', 
-            `pro_quantity`='$quantity', `pro_price`='$Price' WHERE pro_id=$id";
-
-    $result = mysqli_query($conn, $sql);
-
-    if ($result) {
-        header("Location: plist.php?edit=Data Updated successfully");
-    } else {
-        echo "Failed: " . mysqli_error($conn);
-    }
+    $productUPdate = new productUpdate($conn);
+    $productUPdate->updateProduct($id, $productName, $description, $quantity, $price);
 }
 
+$sql = "SELECT * FROM `product` WHERE pro_id = $id LIMIT 1";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+
+$dbConnection->close();
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +33,10 @@ if (isset($_POST['submit'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <title>Edit Product</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -47,14 +51,7 @@ if (isset($_POST['submit'])) {
             <p class="desc">Edit the details to update the product information.</p>
         </div>
 
-        <?php
-        $sql = "SELECT * FROM `product` WHERE pro_id = $id LIMIT 1";
-        $result = mysqli_query($conn, $sql);
-        $row = mysqli_fetch_assoc($result);
 
-        $dbConnection->close();
-
-        ?>
 
         <form action="" method="post">
             <div class="row">
