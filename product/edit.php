@@ -18,9 +18,8 @@ if (isset($_POST['submit'])) {
     $productUPdate->updateProduct($id, $productName, $description, $quantity, $price);
 }
 
-$sql = "SELECT * FROM `product` WHERE pro_id = $id LIMIT 1";
-$result = mysqli_query($conn, $sql);
-$row = mysqli_fetch_assoc($result);
+$productRetrieve = new productRetrieve($conn);
+$row = $productRetrieve->getProduct($id);
 
 $dbConnection->close();
 ?>
