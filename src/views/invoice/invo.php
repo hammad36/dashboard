@@ -1,26 +1,24 @@
 <?php
-include "../../../DB/Connection.php";
+include_once "../../../DB/Connection.php";
+include_once "../../classes/product/product.php";
+include_once "../../classes/product/productRetrieve.php";
+include_once "../../classes/product/productUpdate.php";
+include_once "../../classes/invoice/InvoiceController.php";
+include_once "../../classes/invoice/InvoiceCreator.php";
+include_once "../../classes/invoice/InvoiceNumberGenerator.php";
+include_once "../../classes/invoice/InvoiceValidator.php";
+
 $dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
 $conn = $dbConnection->getConnection();
 
-// Fetch products from the database and calculate the total sold quantity for each product
-$productQuery = "SELECT p.pro_id, p.pro_name, p.pro_price, p.pro_quantity, 
-                        COALESCE(SUM(ip.quantity), 0) AS total_sold 
-                        FROM Product p 
-                        LEFT JOIN Invoice_Product ip ON p.pro_id = ip.pro_id 
-                        GROUP BY p.pro_id, p.pro_name, p.pro_price, p.pro_quantity";
-$productResult = mysqli_query($conn, $productQuery);
-
-// Generate the new invoice number
-$invoiceQuery = "SELECT MAX(inv_number) AS max_invoice_number FROM Invoice";
-$invoiceResult = mysqli_query($conn, $invoiceQuery);
-$row = mysqli_fetch_assoc($invoiceResult);
-$lastInvoiceNumber = $row['max_invoice_number'];
-$newInvoiceNumber = $lastInvoiceNumber ? $lastInvoiceNumber + 1 : 1;
+$productRetrieve = new productRetrieve($conn);
+$productUpdate = new productUpdate($conn);
+$invoiceNumberGenerator = new InvoiceNumberGenerator($conn);
+$invoiceValidator = new InvoiceValidator($productRetrieve);
+$invoiceCreator = new InvoiceCreator($conn, $productUpdate);
+$invoiceController = new InvoiceController($invoiceNumberGenerator, $invoiceValidator, $invoiceCreator);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $invoiceNumber = $_POST['invoiceNumber'];
-    $invoiceDate = date('Y-m-d');
     $clientName = $_POST['clientName'];
     $clientEmail = $_POST['clientEmail'];
     $productIds = $_POST['productSelect'];
@@ -28,67 +26,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prices = $_POST['price'];
     $totalAmount = $_POST['totalPrice'];
 
-    mysqli_begin_transaction($conn);
-
     try {
-        // Validate quantities
-        foreach ($productIds as $index => $productId) {
-            $quantity = $quantities[$index];
-            $productQuery = "SELECT pro_quantity, COALESCE(SUM(ip.quantity), 0) AS total_sold 
-                            FROM Product p 
-                            LEFT JOIN Invoice_Product ip ON p.pro_id = ip.pro_id 
-                            WHERE p.pro_id = '$productId' 
-                            GROUP BY p.pro_id, p.pro_quantity";
-            $productResult = mysqli_query($conn, $productQuery);
-            $productRow = mysqli_fetch_assoc($productResult);
-
-            $availableQuantity = $productRow['pro_quantity'] - $productRow['total_sold'];
-
-            if ($quantity > $availableQuantity) {
-                throw new Exception("Quantity for product ID $productId exceeds available stock.");
-            }
-        }
-
-        // Insert into Invoice table
-        $insertInvoiceQuery = "INSERT INTO Invoice (inv_number, client_name, client_email, inv_date, total_amount)
-                            VALUES ('$invoiceNumber', '$clientName', '$clientEmail', '$invoiceDate', '$totalAmount')";
-        $insertInvoiceResult = mysqli_query($conn, $insertInvoiceQuery);
-
-        if (!$insertInvoiceResult) {
-            throw new Exception('Failed to insert invoice: ' . mysqli_error($conn));
-        }
-
-        // Insert into Invoice_Product table
-        foreach ($productIds as $index => $productId) {
-            $quantity = $quantities[$index];
-            $price = $prices[$index];
-            $lineTotal = $quantity * $price;
-
-            $insertInvoiceProductQuery = "INSERT INTO Invoice_Product (inv_number, pro_id, quantity, line_total)
-                                        VALUES ('$invoiceNumber', '$productId', '$quantity', '$lineTotal')";
-            $insertInvoiceProductResult = mysqli_query($conn, $insertInvoiceProductQuery);
-
-            if (!$insertInvoiceProductResult) {
-                throw new Exception('Failed to insert invoice product: ' . mysqli_error($conn));
-            }
-
-            // Update product quantity in the database
-            $updateProductQuery = "UPDATE Product SET pro_quantity = pro_quantity - $quantity WHERE pro_id = '$productId'";
-            $updateProductResult = mysqli_query($conn, $updateProductQuery);
-
-            if (!$updateProductResult) {
-                throw new Exception('Failed to update product quantity: ' . mysqli_error($conn));
-            }
-        }
-
-        mysqli_commit($conn);
-        header("Location: ilist.php?add=Invoice created successfully");
-        exit();
+        $invoiceController->createInvoice($clientName, $clientEmail, $productIds, $quantities, $prices, $totalAmount);
     } catch (Exception $e) {
-        mysqli_rollback($conn);
         echo '<p class="description text-center">Failed to create invoice: ' . $e->getMessage() . '</p>';
     }
 }
+
+// Fetch products for the form
+$productResult = $productRetrieve->getProducts();
+$newInvoiceNumber = $invoiceNumberGenerator->generateNewInvoiceNumber();
+
 $dbConnection->close();
 ?>
 

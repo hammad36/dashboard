@@ -19,7 +19,7 @@ if (isset($_POST['submit'])) {
 }
 
 $productRetrieve = new productRetrieve($conn);
-$row = $productRetrieve->getProduct($id);
+$row = $productRetrieve->getProductbyID($id);
 
 $dbConnection->close();
 ?>
