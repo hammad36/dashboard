@@ -1,12 +1,9 @@
 <?php
-include "../DB/Connection.php";
-include "./productClasses/productAdd.php";
-include "./productClasses/productUpdate.php";
-include "./productClasses/productRetrieve.php";
+include "../../../DB/Connection.php";
+include "../../classes/product/productAdd.php";
 
 $dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
 $conn = $dbConnection->getConnection();
-$id = intval($_GET['id']);
 
 if (isset($_POST['submit'])) {
     $productName = $_POST['pro_name'];
@@ -14,14 +11,11 @@ if (isset($_POST['submit'])) {
     $quantity = $_POST['pro_quantity'];
     $price = $_POST['pro_price'];
 
-    $productUPdate = new productUpdate($conn);
-    $productUPdate->updateProduct($id, $productName, $description, $quantity, $price);
+    $productAdd = new productAdd($conn);
+    $productAdd->addProduct($productName, $description, $quantity, $price);
 }
-
-$productRetrieve = new productRetrieve($conn);
-$row = $productRetrieve->getProduct($id);
-
 $dbConnection->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -36,8 +30,8 @@ $dbConnection->close();
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <title>Edit Product</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Add New Product</title>
+    <link rel="stylesheet" href="../../../assets/css/Pstyles.css">
 </head>
 
 <body>
@@ -46,40 +40,37 @@ $dbConnection->close();
     </nav>
     <div class="container">
         <div class="text-center">
-            <h1 class="title">Edit Product</h1>
-            <p class="desc">Edit the details to update the product information.</p>
+            <h1 class="title">Add New Product</h1>
+            <p class="desc">Fill in the details below to add a new product to the inventory.</p>
         </div>
-
-
-
         <form action="" method="post">
             <div class="row">
                 <div class="column">
                     <label for="pro_name">Product Name</label>
-                    <input type="text" id="pro_name" name="pro_name" value="<?php echo $row['pro_name'] ?>" required>
+                    <input type="text" id="pro_name" name="pro_name" required>
                 </div>
             </div>
             <div class="row">
                 <div class="column">
                     <label for="description">Description</label>
-                    <input type="text" id="description" name="description" value="<?php echo $row['description'] ?>" required>
+                    <input type="text" id="description" name="description" required>
                 </div>
             </div>
             <div class="row">
                 <div class="column">
                     <label for="pro_quantity">Quantity</label>
-                    <input type="number" id="pro_quantity" name="pro_quantity" value="<?php echo $row['pro_quantity'] ?>" required>
+                    <input type="number" id="pro_quantity" name="pro_quantity" required>
                 </div>
             </div>
             <div class="row">
                 <div class="column">
                     <label for="pro_price">Price</label>
-                    <input type="number" id="pro_price" name="pro_price" value="<?php echo $row['pro_price'] ?>" required>
+                    <input type="number" id="pro_price" name="pro_price" required>
                 </div>
             </div>
             <div class="row">
                 <div class="column">
-                    <button type="submit" name="submit">Update Product</button>
+                    <button type="submit" name="submit">Add Product</button>
                 </div>
             </div>
         </form>

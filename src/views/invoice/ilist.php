@@ -5,24 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
-    <title>Add New Product</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Manage Invoices</title>
+    <link rel="stylesheet" href="../../../assets/css/Istyles.css">
 </head>
 
 <body>
     <nav>
-        <h1 class="mp">Manage Products</h1>
+        <h1 class="mp">Manage Invoices</h1>
     </nav>
 
-    <div class="container" style="max-width: 1000px;">
-
+    <div class="container" style="max-width: 950px;">
         <?php
         if (isset($_GET['add'])) {
             $msg = htmlspecialchars($_GET['add']);
@@ -49,52 +42,59 @@
         }
         ?>
 
-
-        <div class="btns" style="display: flex; justify-content:space-between;">
-            <a href="add_new.php" class="btn btn-dark">Add New Product</a>
-            <a href="../index.php" class="btn btn-dark">back</a>
+        <div class="constainer" style="display: flex; justify-content:space-between;">
+            <a href="invo.php" class="btn btn-dark">Add New Invoice</a>
+            <a href="../../../index.php" class="btn btn-dark">back</a>
         </div>
 
-        <table class="table table-hover table-striped table-bordered text-center" style="margin-top: 20px; ">
+
+        <table class="table table-hover table-striped table-bordered text-center" style="margin-top: 20px;">
             <thead class="table-dark">
                 <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Product Name</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Quantity</th>
-                    <th scope="col">Price</th>
+                    <th scope="col">Invoice Number</th>
+                    <th scope="col">Invoice Date</th>
+                    <th scope="col">Client Name</th>
+                    <th scope="col">Client Email</th>
+                    <th scope="col">Total Quantity</th>
+                    <th scope="col">Total Amount</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
+
             <tbody>
                 <?php
-                include "../DB/Connection.php";
+                include "../../../DB/Connection.php";
                 $dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
                 $conn = $dbConnection->getConnection();
 
-                $sql = "SELECT * FROM product";
+                $sql = "SELECT inv.inv_number, inv.inv_date, inv.client_name, inv.client_email, 
+                        SUM(ip.quantity) AS total_quantity, inv.total_amount
+                        FROM Invoice inv
+                        LEFT JOIN Invoice_Product ip ON inv.inv_number = ip.inv_number
+                        GROUP BY inv.inv_number, inv.inv_date, inv.client_name, inv.client_email, inv.total_amount";
                 $result = mysqli_query($conn, $sql);
                 while ($row = mysqli_fetch_assoc($result)) {
                 ?>
                     <tr>
-                        <td><?php echo $row['pro_id'] ?></td>
-                        <td><?php echo $row['pro_name'] ?></td>
-                        <td><?php echo $row['description'] ?></td>
-                        <td><?php echo $row['pro_quantity'] ?></td>
-                        <td><?php echo $row['pro_price'] ?></td>
+                        <td><?php echo $row['inv_number'] ?></td>
+                        <td><?php echo $row['inv_date'] ?></td>
+                        <td><?php echo $row['client_name'] ?></td>
+                        <td><?php echo $row['client_email'] ?></td>
+                        <td><?php echo $row['total_quantity'] ?></td>
+                        <td><?php echo $row['total_amount'] ?></td>
                         <td style="display: flex; justify-content:space-between; vertical-align:middle;">
-                            <a href="edit.php?id=<?php echo $row['pro_id'] ?>" class="link-dark">
+                            <a href="edit.php?inv_number=<?php echo $row['inv_number'] ?>" class="link-dark">
                                 <i class="fa-solid fa-pen-to-square fs-5 me-3"></i>
                             </a>
-                            <a href="delete.php?id=<?php echo $row['pro_id'] ?>" class="link-dark">
+                            <a href="delete.php?inv_number=<?php echo $row['inv_number'] ?>" class="link-dark">
                                 <i class="fa-solid fa-trash fs-5"></i>
                             </a>
                         </td>
                     </tr>
-                <?php }
+                <?php
+                }
                 $dbConnection->close();
                 ?>
-
             </tbody>
         </table>
     </div>

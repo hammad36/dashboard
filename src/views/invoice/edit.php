@@ -1,5 +1,5 @@
 <?php
-include "../DB/Connection.php";
+include "../../../DB/Connection.php";
 $dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
 $conn = $dbConnection->getConnection();
 
@@ -103,7 +103,7 @@ while ($row = mysqli_fetch_assoc($existingProductResult)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Invoice</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="../../../assets/css/Istyles.css">
 </head>
 
 <body>
@@ -188,7 +188,7 @@ while ($row = mysqli_fetch_assoc($existingProductResult)) {
         </form>
     </div>
 
-    <script src="js/edit.js"></script>
+    <script src="../../../assets/js/invo.js"></script>
 
 </body>
 
