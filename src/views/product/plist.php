@@ -21,7 +21,7 @@
         <h1 class="mp">Manage Products</h1>
     </nav>
 
-    <div class="container" style="max-width: 1000px;">
+    <div class="container">
 
         <?php
         include_once "../../classes/shared/alertHandler.php";
@@ -31,7 +31,7 @@
         ?>
 
 
-        <div class="btns" style="display: flex; justify-content:space-between;">
+        <div class=" btns" style="display: flex; justify-content:space-between;">
             <a href="add_new.php" class="btn btn-dark">Add New Product</a>
             <a href="../../../index.php" class="btn btn-dark">back</a>
         </div>
