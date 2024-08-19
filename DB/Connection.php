@@ -23,7 +23,7 @@ class Connection
         }
     }
 
-    public static function getInstance($hostname, $userName, $password, $database)
+    public static function getInstance($hostname = 'localhost', $userName = 'hammad', $password = 'My@2530', $database = 'dash')
     {
         if (self::$instance === null) {
             self::$instance = new Connection($hostname, $userName, $password, $database);
