@@ -3,20 +3,20 @@ include_once "../../../DB/Connection.php";
 include_once "../../classes/product/product.php";
 include_once "../../classes/product/productRetrieve.php";
 include_once "../../classes/product/productUpdate.php";
-include_once "../../classes/invoice/InvoiceController.php";
-include_once "../../classes/invoice/InvoiceCreator.php";
-include_once "../../classes/invoice/InvoiceNumberGenerator.php";
-include_once "../../classes/invoice/InvoiceValidator.php";
+include_once "../../classes/invoice/invoiceController.php";
+include_once "../../classes/invoice/invoiceCreator.php";
+include_once "../../classes/invoice/invoiceNumberGenerator.php";
+include_once "../../classes/invoice/invoiceValidator.php";
 
 $dbConnection = Connection::getInstance();
 $conn = $dbConnection->getConnection();
 
 $productRetrieve = new productRetrieve($conn);
 $productUpdate = new productUpdate($conn);
-$invoiceNumberGenerator = new InvoiceNumberGenerator($conn);
-$invoiceValidator = new InvoiceValidator($productRetrieve);
-$invoiceCreator = new InvoiceCreator($conn, $productUpdate);
-$invoiceController = new InvoiceController($invoiceNumberGenerator, $invoiceValidator, $invoiceCreator);
+$invoiceNumberGenerator = new invoiceNumberGenerator($conn);
+$invoiceValidator = new invoiceValidator($productRetrieve);
+$invoiceCreator = new invoiceCreator($conn, $productUpdate);
+$invoiceController = new invoiceController($invoiceNumberGenerator, $invoiceValidator, $invoiceCreator);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $clientName = $_POST['clientName'];

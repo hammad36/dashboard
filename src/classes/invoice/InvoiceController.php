@@ -1,11 +1,11 @@
 <?php
-class InvoiceController
+class invoiceController
 {
     private $invoiceNumberGenerator;
     private $invoiceValidator;
     private $invoiceCreator;
 
-    public function __construct(InvoiceNumberGenerator $invoiceNumberGenerator, InvoiceValidator $invoiceValidator, InvoiceCreator $invoiceCreator)
+    public function __construct(invoiceNumberGenerator $invoiceNumberGenerator, invoiceValidator $invoiceValidator, invoiceCreator $invoiceCreator)
     {
         $this->invoiceNumberGenerator = $invoiceNumberGenerator;
         $this->invoiceValidator = $invoiceValidator;

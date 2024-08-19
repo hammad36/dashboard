@@ -1,5 +1,5 @@
 <?php
-class InvoiceValidator
+class invoiceValidator
 {
     private $productRetrieve;
 

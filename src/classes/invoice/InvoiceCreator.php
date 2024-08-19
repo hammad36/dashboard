@@ -1,5 +1,5 @@
 <?php
-class InvoiceCreator
+class invoiceCreator
 {
     private $conn;
     private $productUpdate;

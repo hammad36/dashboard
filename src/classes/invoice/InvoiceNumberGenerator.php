@@ -1,5 +1,5 @@
 <?php
-class InvoiceNumberGenerator
+class invoiceNumberGenerator
 {
     private $conn;
 
