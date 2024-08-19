@@ -10,7 +10,7 @@ class productRetrieve extends product
 
         return $this->fetchResults($sql, $params, $types);
     }
-    //////////
+
 
     public function getProducts()
     {

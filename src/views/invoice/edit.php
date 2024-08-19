@@ -1,7 +1,14 @@
 <?php
 include "../../../DB/Connection.php";
+include "../../classes/invoice/invoiceUpdater.php";
+include "../../classes/invoice/invoiceFetcher.php";
+include "../../classes/product/productValidator.php";
+
 $dbConnection = Connection::getInstance();
 $conn = $dbConnection->getConnection();
+
+$invoiceUpdater = new InvoiceUpdater($conn, new ProductValidator($conn));
+$invoiceFetcher = new InvoiceFetcher($conn);
 
 $id = $_GET['inv_number'];
 
@@ -13,87 +20,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $productIds = $_POST['productSelect'];
     $quantities = $_POST['quantity'];
     $prices = $_POST['price'];
-    $totalPrice = $_POST['totalPrice']; // Get total price from form input
+    $totalPrice = $_POST['totalPrice'];
 
-    mysqli_begin_transaction($conn);
-
-    try {
-        // Validate quantities
-        foreach ($productIds as $index => $productId) {
-            $quantity = $quantities[$index];
-            $productQuery = "SELECT pro_quantity, COALESCE(SUM(ip.quantity), 0) AS total_sold 
-                                    FROM Product p 
-                                    LEFT JOIN Invoice_Product ip ON p.pro_id = ip.pro_id 
-                                    WHERE p.pro_id = '$productId' 
-                                    GROUP BY p.pro_id, p.pro_quantity";
-            $productResult = mysqli_query($conn, $productQuery);
-            $productRow = mysqli_fetch_assoc($productResult);
-
-            $availableQuantity = $productRow['pro_quantity'] - $productRow['total_sold'];
-
-            if ($quantity > $availableQuantity) {
-                throw new Exception("Quantity for product ID $productId exceeds available stock.");
-            }
-        }
-
-        // Update Invoice table
-        $sql = "UPDATE `Invoice` SET `inv_date`='$invoiceDate', `client_name`='$clientName', `client_email`='$clientEmail', `total_amount`='$totalPrice' WHERE inv_number='$invoiceNumber'";
-        $result = mysqli_query($conn, $sql);
-        if (!$result) {
-            throw new Exception('Failed to update invoice: ' . mysqli_error($conn));
-        }
-
-        // Delete existing Invoice_Product records
-        $deleteInvoiceProductQuery = "DELETE FROM `Invoice_Product` WHERE inv_number='$invoiceNumber'";
-        $deleteInvoiceProductResult = mysqli_query($conn, $deleteInvoiceProductQuery);
-        if (!$deleteInvoiceProductResult) {
-            throw new Exception('Failed to delete existing invoice products: ' . mysqli_error($conn));
-        }
-
-        // Insert updated Invoice_Product records
-        foreach ($productIds as $index => $productId) {
-            $quantity = $quantities[$index];
-            $price = $prices[$index];
-            $lineTotal = $quantity * $price;
-
-            $insertInvoiceProductQuery = "INSERT INTO `Invoice_Product` (inv_number, pro_id, quantity, line_total)
-            VALUES ('$invoiceNumber', '$productId', '$quantity', '$lineTotal')";
-            $insertInvoiceProductResult = mysqli_query($conn, $insertInvoiceProductQuery);
-            if (!$insertInvoiceProductResult) {
-                throw new Exception('Failed to insert updated invoice product: ' . mysqli_error($conn));
-            }
-        }
-
-        mysqli_commit($conn);
-        header("Location: ilist.php?edit=Data Updated successfully");
-        exit();
-    } catch (Exception $e) {
-        mysqli_rollback($conn);
-        echo '<p class="description text-center">Failed to update invoice: ' . $e->getMessage() . '</p>';
-    }
+    $message = $invoiceUpdater->updateInvoice($invoiceNumber, $invoiceDate, $clientName, $clientEmail, $productIds, $quantities, $prices, $totalPrice);
+    header("Location: ilist.php?edit=$message");
+    exit();
 }
 
-// Fetch invoice details
-$invoiceQuery = "SELECT * FROM `Invoice` WHERE inv_number = '$id' LIMIT 1";
-$invoiceResult = mysqli_query($conn, $invoiceQuery);
-$invoice = mysqli_fetch_assoc($invoiceResult);
+$invoice = $invoiceFetcher->fetchInvoiceDetails($id);
 
-// Fetch products from the database and calculate the total sold quantity for each product
-$productQuery = "SELECT p.pro_id, p.pro_name, p.pro_price, p.pro_quantity, 
-                        COALESCE(SUM(ip.quantity), 0) AS total_sold 
-                FROM Product p 
-                LEFT JOIN Invoice_Product ip ON p.pro_id = ip.pro_id 
-                GROUP BY p.pro_id, p.pro_name, p.pro_price, p.pro_quantity";
-$productResult = mysqli_query($conn, $productQuery);
+$products = $invoiceFetcher->fetchProducts();
 
-// Fetch existing products for this invoice
-$existingProductQuery = "SELECT * FROM `Invoice_Product` WHERE inv_number = '$id'";
-$existingProductResult = mysqli_query($conn, $existingProductQuery);
-$existingProducts = [];
-while ($row = mysqli_fetch_assoc($existingProductResult)) {
-    $existingProducts[$row['pro_id']] = $row;
-}
-
+$existingProducts = $invoiceFetcher->fetchExistingProducts($id);
 ?>
 
 <!DOCTYPE html>
@@ -142,8 +80,8 @@ while ($row = mysqli_fetch_assoc($existingProductResult)) {
                         <label for="productSelect">Select Products</label>
                         <select id="productSelect" name="productSelect[]" multiple required>
                             <?php
-                            if ($productResult->num_rows > 0) {
-                                while ($row = $productResult->fetch_assoc()) {
+                            if ($products->num_rows > 0) {
+                                while ($row = $products->fetch_assoc()) {
                                     $selected = isset($existingProducts[$row['pro_id']]) ? 'selected' : '';
                                     $availableQuantity = $row["pro_quantity"] - $row["total_sold"];
                                     echo '<option value="' . $row["pro_id"] . '" data-price="' . $row["pro_price"] . '" data-quantity="' . $availableQuantity . '" ' . $selected . '>' . $row["pro_name"] . '</option>';
@@ -188,7 +126,7 @@ while ($row = mysqli_fetch_assoc($existingProductResult)) {
         </form>
     </div>
 
-    <script src="../../../assets/js/invo.js"></script>
+    <script src="../../../assets/js/edit.js"></script>
 
 </body>
 
