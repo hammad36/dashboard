@@ -9,14 +9,14 @@ class Connection
     private static $instance = null;
     private $conn;
 
-    private function __construct($hostname, $userName, $password, $database)
+    private function __construct($hostname = 'localhost', $userName = 'hammad', $password = 'My@2530', $database = 'dash')
     {
         $this->hostname = $hostname;
         $this->userName = $userName;
         $this->password = $password;
         $this->database = $database;
 
-        $this->conn = mysqli_connect($hostname = 'localhost', $userName = 'hammad', $password = 'My@2530', $database = 'dash');
+        $this->conn = mysqli_connect($this->hostname, $this->userName, $this->password, $this->database);
 
         if (!$this->conn) {
             die("Connection failed: " . mysqli_connect_error());

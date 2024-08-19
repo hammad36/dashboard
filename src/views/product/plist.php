@@ -69,7 +69,7 @@
             <tbody>
                 <?php
                 include "../../../DB/Connection.php";
-                $dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
+                $dbConnection = Connection::getInstance();
                 $conn = $dbConnection->getConnection();
 
                 $sql = "SELECT * FROM product";

@@ -3,9 +3,9 @@ class Delete
 {
     private $conn;
 
-    public function __construct($hostname, $username, $password, $dbname)
+    public function __construct()
     {
-        $dbConnection = Connection::getInstance($hostname, $username, $password, $dbname);
+        $dbConnection = Connection::getInstance();
         $this->conn = $dbConnection->getConnection();
     }
 

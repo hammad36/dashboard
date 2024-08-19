@@ -4,7 +4,7 @@ include "../../classes/product/productAdd.php";
 include "../../classes/product/productRetrieve.php";
 include "../../classes/product/productUpdate.php";
 
-$dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
+$dbConnection = Connection::getInstance();
 $conn = $dbConnection->getConnection();
 $id = intval($_GET['id']);
 

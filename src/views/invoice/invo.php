@@ -8,7 +8,7 @@ include_once "../../classes/invoice/InvoiceCreator.php";
 include_once "../../classes/invoice/InvoiceNumberGenerator.php";
 include_once "../../classes/invoice/InvoiceValidator.php";
 
-$dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
+$dbConnection = Connection::getInstance();
 $conn = $dbConnection->getConnection();
 
 $productRetrieve = new productRetrieve($conn);

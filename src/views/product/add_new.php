@@ -2,7 +2,7 @@
 include "../../../DB/Connection.php";
 include "../../classes/product/productAdd.php";
 
-$dbConnection = Connection::getInstance('localhost', 'hammad', 'My@2530', 'dash');
+$dbConnection = Connection::getInstance();
 $conn = $dbConnection->getConnection();
 
 if (isset($_POST['submit'])) {
