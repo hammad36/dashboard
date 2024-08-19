@@ -24,29 +24,10 @@
     <div class="container" style="max-width: 1000px;">
 
         <?php
-        if (isset($_GET['add'])) {
-            $msg = htmlspecialchars($_GET['add']);
-            echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
-        ' . $msg . '
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>';
-        }
+        include_once "../../classes/shared/alertHandler.php";
 
-        if (isset($_GET['remove'])) {
-            $msg = htmlspecialchars($_GET['remove']);
-            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-        ' . $msg . '
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>';
-        }
-
-        if (isset($_GET['edit'])) {
-            $msg = htmlspecialchars($_GET['edit']);
-            echo '<div class="alert alert-info alert-dismissible fade show" role="alert">
-        ' . $msg . '
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>';
-        }
+        $alertHandler = new AlertHandler();
+        $alertHandler->handleAlert();
         ?>
 
 
