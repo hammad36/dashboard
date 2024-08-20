@@ -1,12 +1,12 @@
 <?php
-include_once "../../../DB/Connection.php";
-include_once "../../classes/product/product.php";
-include_once "../../classes/product/productRetrieve.php";
-include_once "../../classes/product/productUpdate.php";
-include_once "../../classes/invoice/invoiceController.php";
-include_once "../../classes/invoice/invoiceCreator.php";
-include_once "../../classes/invoice/invoiceNumberGenerator.php";
-include_once "../../classes/invoice/invoiceValidator.php";
+include "../../../DB/Connection.php";
+include "../../classes/product/product.php";
+include "../../classes/product/productRetrieve.php";
+include "../../classes/product/productUpdate.php";
+include "../../classes/invoice/invoiceController.php";
+include "../../classes/invoice/invoiceCreator.php";
+include "../../classes/invoice/invoiceNumberGenerator.php";
+include "../../classes/invoice/invoiceValidator.php";
 
 $dbConnection = Connection::getInstance();
 $conn = $dbConnection->getConnection();

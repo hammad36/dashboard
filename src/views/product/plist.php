@@ -26,7 +26,7 @@
         <?php
         include_once "../../classes/shared/alertHandler.php";
 
-        $alertHandler = new AlertHandler();
+        $alertHandler = new alertHandler();
         $alertHandler->handleAlert();
         ?>
 
@@ -53,7 +53,7 @@
                 $dbConnection = Connection::getInstance();
                 $conn = $dbConnection->getConnection();
 
-                $sql = "SELECT * FROM product";
+                $sql = "SELECT * FROM Product";
                 $result = mysqli_query($conn, $sql);
 
                 while ($row = mysqli_fetch_assoc($result)) {

@@ -1,6 +1,6 @@
 <?php
 
-class ProductValidator
+class productValidator
 {
     private $conn;
 

@@ -1,8 +1,8 @@
 <?php
 include "../../../DB/Connection.php";
-include "InvoiceUpdater.php";
-include "ProductValidator.php";
-include "InvoiceFetcher.php";
+include_once "invoiceUpdater.php";
+include_once "../product/productValidator.php";
+include_once "invoiceFetcher.php";
 
 class invoiceUpdaterController
 {
@@ -14,9 +14,9 @@ class invoiceUpdaterController
     {
         $dbConnection = Connection::getInstance();
         $this->conn = $dbConnection->getConnection();
-        $productValidator = new ProductValidator($this->conn);
-        $this->invoiceUpdater = new InvoiceUpdater($this->conn, $productValidator);
-        $this->invoiceFetcher = new InvoiceFetcher($this->conn);
+        $productValidator = new productValidator($this->conn);
+        $this->invoiceUpdater = new invoiceUpdater($this->conn, $productValidator);
+        $this->invoiceFetcher = new invoiceFetcher($this->conn);
     }
 
     public function handleRequest()

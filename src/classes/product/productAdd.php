@@ -4,7 +4,7 @@ class productAdd extends product
 {
     public function addProduct($productName, $description, $quantity, $price)
     {
-        $sql = "INSERT INTO `product`(`pro_name`, `description`, `pro_price`, `pro_quantity`) 
+        $sql = "INSERT INTO `Product`(`pro_name`, `description`, `pro_price`, `pro_quantity`) 
                 VALUES (?, ?, ?, ?)";
         $params = [$productName, $description, $price, $quantity];
         $types = "ssdi";

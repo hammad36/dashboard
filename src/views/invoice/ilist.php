@@ -22,7 +22,7 @@
 
         include_once "../../classes/shared/alertHandler.php";
 
-        $alertHandler = new AlertHandler();
+        $alertHandler = new alertHandler();
         $alertHandler->handleAlert();
 
         ?>

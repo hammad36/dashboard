@@ -1,6 +1,6 @@
 <?php
 
-class InvoiceFetcher
+class invoiceFetcher
 {
     private $conn;
 

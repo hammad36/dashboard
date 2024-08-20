@@ -1,6 +1,6 @@
 <?php
 
-class AlertHandler
+class alertHandler
 {
     public function displayAlert($type, $message)
     {

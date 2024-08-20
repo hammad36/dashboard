@@ -1,14 +1,14 @@
 <?php
 include "../../../DB/Connection.php";
-include "../../classes/invoice/invoiceUpdater.php";
-include "../../classes/invoice/invoiceFetcher.php";
-include "../../classes/product/productValidator.php";
+include_once "../../classes/invoice/invoiceUpdater.php";
+include_once "../../classes/invoice/invoiceFetcher.php";
+include_once "../../classes/product/productValidator.php";
 
 $dbConnection = Connection::getInstance();
 $conn = $dbConnection->getConnection();
 
-$invoiceUpdater = new InvoiceUpdater($conn, new ProductValidator($conn));
-$invoiceFetcher = new InvoiceFetcher($conn);
+$invoiceUpdater = new invoiceUpdater($conn, new productValidator($conn));
+$invoiceFetcher = new invoiceFetcher($conn);
 
 $id = $_GET['inv_number'];
 

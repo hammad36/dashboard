@@ -4,7 +4,7 @@ class productRetrieve extends product
 {
     public function getProductbyID($id)
     {
-        $sql = "SELECT * FROM `product` WHERE `pro_id` = ? LIMIT 1";
+        $sql = "SELECT * FROM `Product` WHERE `pro_id` = ? LIMIT 1";
         $params = [$id];
         $types = "i";
 
