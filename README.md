@@ -1,18 +1,33 @@
-# Dashboard Features
+# 🧾 Dashboard Features
 
-## Invoice Management
-- **Create** new invoices
-- **Edit** existing invoices
-- **Delete** invoices
-- **View** a list of all invoices with relevant details (e.g., invoice number, date, total amount)
+## Live Demo
+Check out the live version of the project [here!](http://hammad.wuaze.com/)
 
-## Product Management
-- **Add** new products
-- **Edit** existing products
-- **Delete** products
-- **View** a list of all products with relevant details (e.g., product name, description, price)
+---
 
-## Invoice Details
-- Each invoice can include multiple products
-- Products are selectable from a product list
-- Display the total amount based on selected products and their quantities
+## 📋 Invoice Management
+- **Create** new invoices easily.
+- **Edit** existing invoices with a few clicks.
+- **Delete** invoices that are no longer needed.
+- **View** a comprehensive list of all invoices, including:
+  - Invoice Number
+  - Date
+  - Total Amount
+
+---
+
+## 🛒 Product Management
+- **Add** new products to your catalog.
+- **Edit** product details as needed.
+- **Delete** products that are no longer in stock.
+- **View** a detailed list of all products, including:
+  - Product Name
+  - Description
+  - Price
+
+---
+
+## 📄 Invoice Details
+- Seamlessly include multiple products in each invoice.
+- Select products from an easy-to-navigate product list.
+- Automatically calculate and display the total amount based on selected products and their quantities.
