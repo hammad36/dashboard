@@ -9,7 +9,7 @@ class Connection
     private static $instance = null;
     private $conn;
 
-    private function __construct($hostname = 'localhost', $userName = 'hammad', $password = 'My@2530', $database = 'dash')
+    private function __construct($hostname = 'localhost', $userName = 'hammad', $password = '', $database = 'dash')
     {
         $this->hostname = $hostname;
         $this->userName = $userName;
@@ -23,7 +23,7 @@ class Connection
         }
     }
 
-    public static function getInstance($hostname = 'localhost', $userName = 'hammad', $password = 'My@2530', $database = 'dash')
+    public static function getInstance($hostname = 'localhost', $userName = 'hammad', $password = '', $database = 'dash')
     {
         if (self::$instance === null) {
             self::$instance = new Connection($hostname, $userName, $password, $database);
