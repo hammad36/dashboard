@@ -47,6 +47,11 @@ $dbConnection->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Create New Invoice</title>
     <link rel="stylesheet" href="../../../assets/css/Istyles.css">
 </head>
@@ -56,6 +61,9 @@ $dbConnection->close();
         <p class="mp">Create New Invoice</p>
     </nav>
     <div class="container">
+        <div class=" btns" style="display: flex; justify-content:flex-end; margin-bottom: -40px;">
+            <a href="./ilist.php" class="btn btn-dark">back</a>
+        </div>
         <h1 class="title text-center">Create New Invoice</h1>
         <p class="description text-center">Fill in the details below to create a new invoice.</p>
         <form id="invoiceForm" class="formInt" method="POST" action="">

@@ -39,6 +39,9 @@ $dbConnection->close();
         <h1 class="mp">Manage Products</h1>
     </nav>
     <div class="container">
+        <div class=" btns" style="display: flex; justify-content:flex-end; margin-bottom: -40px;">
+            <a href="./plist.php" class="btn btn-dark">back</a>
+        </div>
         <div class="text-center">
             <h1 class="title">Add New Product</h1>
             <p class="desc">Fill in the details below to add a new product to the inventory.</p>
