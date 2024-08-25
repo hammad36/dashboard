@@ -81,10 +81,8 @@ $dbConnection->close();
                     <input type="number" id="pro_price" name="pro_price" value="<?php echo $row['pro_price'] ?>" required>
                 </div>
             </div>
-            <div class="row">
-                <div class="column">
-                    <button type="submit" name="submit">Update Product</button>
-                </div>
+            <div class="text-center">
+                <button type="submit" name="submit">Update Product</button>
             </div>
         </form>
     </div>

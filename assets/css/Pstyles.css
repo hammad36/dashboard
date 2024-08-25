@@ -72,7 +72,9 @@ label {
     font-weight: bold;
     margin-bottom: 5px;
 }
-
+.text-center {
+    text-align: center;
+}
 input[type="text"],
 input[type="number"],
 input[type="file"],
