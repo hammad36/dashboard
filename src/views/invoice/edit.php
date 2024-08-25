@@ -84,7 +84,7 @@ $existingProducts = $invoiceFetcher->fetchExistingProducts($id);
             <div id="productsContainer">
                 <div class="row">
                     <div class="column">
-                        <label for="productSelect">Select Products</label>
+                        <label for="productSelect">Select Products <span class="description text-center"> (To modify quantities, please reselect the items.) </span></label>
                         <select id="productSelect" name="productSelect[]" multiple required>
                             <?php
                             if ($products->num_rows > 0) {
