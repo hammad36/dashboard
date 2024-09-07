@@ -36,49 +36,51 @@
             <a href="../../../index.php" class="btn btn-dark">back</a>
         </div>
 
-        <table class="table table-hover table-striped table-bordered text-center" style="margin-top: 20px; ">
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Product Name</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Quantity</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                include "../../../DB/Connection.php";
-                $dbConnection = Connection::getInstance();
-                $conn = $dbConnection->getConnection();
-
-                $sql = "SELECT * FROM Product";
-                $result = mysqli_query($conn, $sql);
-
-                while ($row = mysqli_fetch_assoc($result)) {
-                ?>
+        <div class="table-responsive">
+            <table class="table table-hover table-striped table-bordered text-center" style="margin-top: 20px; ">
+                <thead class="table-dark">
                     <tr>
-                        <td><?php echo $row['pro_id'] ?></td>
-                        <td><?php echo $row['pro_name'] ?></td>
-                        <td><?php echo $row['description'] ?></td>
-                        <td><?php echo $row['pro_quantity'] ?></td>
-                        <td><?php echo $row['pro_price'] ?></td>
-                        <td style="display: flex; justify-content:space-between; vertical-align:middle;">
-                            <a href="edit.php?id=<?php echo $row['pro_id'] ?>" class="link-dark">
-                                <i class="fa-solid fa-pen-to-square fs-5 me-3"></i>
-                            </a>
-                            <a href="delete.php?id=<?php echo $row['pro_id'] ?>" class="link-dark">
-                                <i class="fa-solid fa-trash fs-5"></i>
-                            </a>
-                        </td>
+                        <th scope="col">ID</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Action</th>
                     </tr>
-                <?php }
-                $dbConnection->close();
-                ?>
+                </thead>
+                <tbody>
+                    <?php
+                    include "../../../DB/Connection.php";
+                    $dbConnection = Connection::getInstance();
+                    $conn = $dbConnection->getConnection();
 
-            </tbody>
-        </table>
+                    $sql = "SELECT * FROM Product";
+                    $result = mysqli_query($conn, $sql);
+
+                    while ($row = mysqli_fetch_assoc($result)) {
+                    ?>
+                        <tr>
+                            <td><?php echo $row['pro_id'] ?></td>
+                            <td><?php echo $row['pro_name'] ?></td>
+                            <td><?php echo $row['description'] ?></td>
+                            <td><?php echo $row['pro_quantity'] ?></td>
+                            <td><?php echo $row['pro_price'] ?></td>
+                            <td style="display: flex; justify-content:space-between; vertical-align:middle;">
+                                <a href="edit.php?id=<?php echo $row['pro_id'] ?>" class="link-dark">
+                                    <i class="fa-solid fa-pen-to-square fs-5 me-3"></i>
+                                </a>
+                                <a href="delete.php?id=<?php echo $row['pro_id'] ?>" class="link-dark">
+                                    <i class="fa-solid fa-trash fs-5"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php }
+                    $dbConnection->close();
+                    ?>
+
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Bootstrap JS and dependencies -->
