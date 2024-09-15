@@ -9,10 +9,15 @@ $conn = $dbConnection->getConnection();
 $id = intval($_GET['id']);
 
 if (isset($_POST['submit'])) {
-    $productName = $_POST['pro_name'];
-    $description = $_POST['description'];
-    $quantity = $_POST['pro_quantity'];
-    $price = $_POST['pro_price'];
+    $productName = isset($_POST['pro_name']) ? $_POST['pro_name'] : '';
+    $productName = isset($_POST['description']) ? $_POST['description'] : '';
+    $productName = isset($_POST['pro_quantity']) ? $_POST['pro_quantity'] : '';
+    $productName = isset($_POST['pro_price']) ? $_POST['pro_price'] : '';
+
+    if (empty($pro_name) || empty($description) || empty($pro_quantity) || empty($pro_price)) {
+        header("Location: plist.php?error=Please ensure all fields are completed before submitting. Kindly try again.");
+        exit();
+    }
 
     $productUPdate = new productUpdate($conn);
     $productUPdate->updateProduct($id, $productName, $description, $quantity, $price);
