@@ -16,6 +16,9 @@ class alertHandler
             case 'edit':
                 $alertType = 'alert-info';
                 break;
+            case 'error':
+                $alertType = 'alert-warning';
+                break;
             default:
                 return;
         }
@@ -38,6 +41,9 @@ class alertHandler
 
         if (isset($_GET['edit'])) {
             $this->displayAlert('edit', $_GET['edit']);
+        }
+        if (isset($_GET['error'])) {
+            $this->displayAlert('error', $_GET['error']);
         }
     }
 }
