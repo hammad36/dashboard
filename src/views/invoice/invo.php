@@ -26,23 +26,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = isset($_POST['price']) ? $_POST['price'] : [];
     $totalPrice = isset($_POST['totalPrice']) ? $_POST['totalPrice'] : 0;
 
+    // Ensure the total price is calculated correctly on the server-side
+    $calculatedTotalPrice = 0;
+    foreach ($productSelect as $index => $productId) {
+        $productRow = $productRetrieve->getProductDetails($productId);
+        $pricePerItem = $productRow['pro_price'];
+        $quantityForProduct = $quantity[$index];
+        $calculatedTotalPrice += $pricePerItem * $quantityForProduct;
+    }
+
+    // Check if the provided total price matches the calculated total price
+    if ($totalPrice != $calculatedTotalPrice) {
+        header("Location: ilist.php?error=Calculated total price does not match the provided total price. Kindly try again.");
+        exit();
+    }
+
+    // Validate input fields
     if (empty($clientName) || empty($clientEmail) || empty($productSelect) || empty($quantity) || empty($price) || empty($totalPrice)) {
         header("Location: ilist.php?error=Please ensure all fields are completed before submitting. Kindly try again.");
         exit();
     }
 
-
     try {
         $invoiceValidator->validateQuantities($productSelect, $quantity);
-
-        foreach ($productSelect as $index => $productId) {
-            $productRow = $productRetrieve->getProductDetails($productId);
-            $pricePerItem = $productRow['pro_price'];
-            $quantityForProduct = $quantity[$index];
-            $totalPrice += $pricePerItem * $quantityForProduct;
-        }
-
         $invoiceController->createInvoice($clientName, $clientEmail, $productSelect, $quantity, [], $totalPrice);
+        header("Location: ilist.php?success=Invoice created successfully.");
+        exit();
     } catch (Exception $e) {
         echo '<p class="description text-center">Failed to create invoice: ' . $e->getMessage() . '</p>';
     }
@@ -53,7 +62,6 @@ $newInvoiceNumber = $invoiceNumberGenerator->generateNewInvoiceNumber();
 
 $dbConnection->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
