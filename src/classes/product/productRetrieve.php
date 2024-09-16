@@ -24,11 +24,35 @@ class productRetrieve extends product
 
     public function getProductQuantity($productId)
     {
-        $query = "SELECT pro_quantity, COALESCE(SUM(ip.quantity), 0) AS total_sold 
+        $query = "SELECT p.pro_quantity, COALESCE(SUM(ip.quantity), 0) AS total_sold 
                     FROM Product p 
                     LEFT JOIN Invoice_Product ip ON p.pro_id = ip.pro_id 
                     WHERE p.pro_id = ? 
                     GROUP BY p.pro_id, p.pro_quantity";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $productId);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+
+
+    public function getProductPrice($productId)
+    {
+        $query = "SELECT pro_price FROM Product WHERE pro_id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $productId);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+
+    public function getProductDetails($productId)
+    {
+        $query = "SELECT p.pro_id, p.pro_name, p.pro_price, p.pro_quantity, 
+                    COALESCE(SUM(ip.quantity), 0) AS total_sold 
+                FROM Product p 
+                LEFT JOIN Invoice_Product ip ON p.pro_id = ip.pro_id 
+                WHERE p.pro_id = ? 
+                GROUP BY p.pro_id, p.pro_name, p.pro_price, p.pro_quantity";
         $stmt = $this->conn->prepare($query);
         $stmt->bind_param("i", $productId);
         $stmt->execute();

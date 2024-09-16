@@ -19,21 +19,35 @@ $invoiceCreator = new invoiceCreator($conn, $productUpdate);
 $invoiceController = new invoiceController($invoiceNumberGenerator, $invoiceValidator, $invoiceCreator);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $clientName = $_POST['clientName'];
-    $clientEmail = $_POST['clientEmail'];
-    $productIds = $_POST['productSelect'];
-    $quantities = $_POST['quantity'];
-    $prices = $_POST['price'];
-    $totalAmount = $_POST['totalPrice'];
+    $clientName = isset($_POST['clientName']) ? $_POST['clientName'] : '';
+    $clientEmail = isset($_POST['clientEmail']) ? $_POST['clientEmail'] : '';
+    $productSelect = isset($_POST['productSelect']) ? $_POST['productSelect'] : [];
+    $quantity = isset($_POST['quantity']) ? $_POST['quantity'] : [];
+    $price = isset($_POST['price']) ? $_POST['price'] : [];
+    $totalPrice = isset($_POST['totalPrice']) ? $_POST['totalPrice'] : 0;
+
+    if (empty($clientName) || empty($clientEmail) || empty($productSelect) || empty($quantity) || empty($price) || empty($totalPrice)) {
+        header("Location: ilist.php?error=Please ensure all fields are completed before submitting. Kindly try again.");
+        exit();
+    }
+
 
     try {
-        $invoiceController->createInvoice($clientName, $clientEmail, $productIds, $quantities, $prices, $totalAmount);
+        $invoiceValidator->validateQuantities($productSelect, $quantity);
+
+        foreach ($productSelect as $index => $productId) {
+            $productRow = $productRetrieve->getProductDetails($productId);
+            $pricePerItem = $productRow['pro_price'];
+            $quantityForProduct = $quantity[$index];
+            $totalPrice += $pricePerItem * $quantityForProduct;
+        }
+
+        $invoiceController->createInvoice($clientName, $clientEmail, $productSelect, $quantity, [], $totalPrice);
     } catch (Exception $e) {
         echo '<p class="description text-center">Failed to create invoice: ' . $e->getMessage() . '</p>';
     }
 }
 
-// Fetch products for the form
 $productResult = $productRetrieve->getProducts();
 $newInvoiceNumber = $invoiceNumberGenerator->generateNewInvoiceNumber();
 
