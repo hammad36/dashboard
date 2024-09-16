@@ -37,11 +37,6 @@ class invoiceCreator
                 if (!$stmt->execute()) {
                     throw new Exception('Failed to insert invoice product: ' . mysqli_error($this->conn));
                 }
-
-                // Update product quantity
-                if (!$this->productUpdate->updateProductQuantity($productId, $quantity)) {
-                    throw new Exception('Failed to update product quantity: ' . mysqli_error($this->conn));
-                }
             }
 
             mysqli_commit($this->conn);

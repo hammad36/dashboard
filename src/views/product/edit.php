@@ -51,6 +51,9 @@ $dbConnection->close();
         <h1 class="mp">Manage Products</h1>
     </nav>
     <div class="container">
+        <div class=" btns" style="display: flex; justify-content:flex-end; margin-bottom: -40px;">
+            <a href="./plist.php" class="btn btn-dark">back</a>
+        </div>
         <div class="text-center">
             <h1 class="title">Edit Product</h1>
             <p class="desc">Edit the details to update the product information.</p>
@@ -83,10 +86,8 @@ $dbConnection->close();
                     <input type="number" id="pro_price" name="pro_price" value="<?php echo $row['pro_price'] ?>" required>
                 </div>
             </div>
-            <div class="row">
-                <div class="column">
-                    <button type="submit" name="submit">Update Product</button>
-                </div>
+            <div class="text-center">
+                <button type="submit" name="submit">Update Product</button>
             </div>
         </form>
     </div>

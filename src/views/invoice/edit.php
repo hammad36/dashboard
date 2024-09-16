@@ -56,6 +56,11 @@ $existingProducts = $invoiceFetcher->fetchExistingProducts($id);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Edit Invoice</title>
     <link rel="stylesheet" href="../../../assets/css/Istyles.css">
 </head>
@@ -65,7 +70,9 @@ $existingProducts = $invoiceFetcher->fetchExistingProducts($id);
         <p class="mp">Manage invoices</p>
     </nav>
     <div class="container">
-
+        <div class=" btns" style="display: flex; justify-content:flex-end; margin-bottom: -40px;">
+            <a href="./ilist.php" class="btn btn-dark">back</a>
+        </div>
         <h1 class="title text-center">Edit Invoice</h1>
         <p class="description text-center">Edit the details to update the invoice information.</p>
 
@@ -93,7 +100,7 @@ $existingProducts = $invoiceFetcher->fetchExistingProducts($id);
             <div id="productsContainer">
                 <div class="row">
                     <div class="column">
-                        <label for="productSelect">Select Products</label>
+                        <label for="productSelect">Select Products <span class="description text-center"> (To modify quantities, please reselect the products.) </span></label>
                         <select id="productSelect" name="productSelect[]" multiple required>
                             <?php
                             if ($products->num_rows > 0) {

@@ -32,50 +32,51 @@
             <a href="../../../index.php" class="btn btn-dark">back</a>
         </div>
 
-
-        <table class="table table-hover table-striped table-bordered text-center" style="margin-top: 20px;">
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">Invoice Number</th>
-                    <th scope="col">Invoice Date</th>
-                    <th scope="col">Client Name</th>
-                    <th scope="col">Client Email</th>
-                    <th scope="col">Total Quantity</th>
-                    <th scope="col">Total Amount</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <?php
-                include_once "../../classes/invoice/invoiceListController.php";
-
-                $invoiceListController = new invoiceListController();
-                $result = $invoiceListController->fetchInvoices();
-
-                while ($row = mysqli_fetch_assoc($result)) {
-                ?>
+        <div class="table-responsive">
+            <table class="table table-hover table-striped table-bordered text-center" style="margin-top: 20px;">
+                <thead class="table-dark">
                     <tr>
-                        <td><?php echo $row['inv_number'] ?></td>
-                        <td><?php echo $row['inv_date'] ?></td>
-                        <td><?php echo $row['client_name'] ?></td>
-                        <td><?php echo $row['client_email'] ?></td>
-                        <td><?php echo $row['total_quantity'] ?></td>
-                        <td><?php echo $row['total_amount'] ?></td>
-                        <td style="display: flex; justify-content:space-between; vertical-align:middle;">
-                            <a href="edit.php?inv_number=<?php echo $row['inv_number'] ?>" class="link-dark">
-                                <i class="fa-solid fa-pen-to-square fs-5 me-3"></i>
-                            </a>
-                            <a href="delete.php?inv_number=<?php echo $row['inv_number'] ?>" class="link-dark">
-                                <i class="fa-solid fa-trash fs-5"></i>
-                            </a>
-                        </td>
+                        <th scope="col">Invoice Number</th>
+                        <th scope="col">Invoice Date</th>
+                        <th scope="col">Client Name</th>
+                        <th scope="col">Client Email</th>
+                        <th scope="col">Total Quantity</th>
+                        <th scope="col">Total Amount</th>
+                        <th scope="col">Action</th>
                     </tr>
-                <?php
-                }
-                ?>
-            </tbody>
-        </table>
+                </thead>
+
+                <tbody>
+                    <?php
+                    include_once "../../classes/invoice/invoiceListController.php";
+
+                    $invoiceListController = new invoiceListController();
+                    $result = $invoiceListController->fetchInvoices();
+
+                    while ($row = mysqli_fetch_assoc($result)) {
+                    ?>
+                        <tr>
+                            <td><?php echo $row['inv_number'] ?></td>
+                            <td><?php echo $row['inv_date'] ?></td>
+                            <td><?php echo $row['client_name'] ?></td>
+                            <td><?php echo $row['client_email'] ?></td>
+                            <td><?php echo $row['total_quantity'] ?></td>
+                            <td><?php echo $row['total_amount'] ?></td>
+                            <td style="display: flex; justify-content:space-between; vertical-align:middle;">
+                                <a href="edit.php?inv_number=<?php echo $row['inv_number'] ?>" class="link-dark">
+                                    <i class="fa-solid fa-pen-to-square fs-5 me-3"></i>
+                                </a>
+                                <a href="delete.php?inv_number=<?php echo $row['inv_number'] ?>" class="link-dark">
+                                    <i class="fa-solid fa-trash fs-5"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Bootstrap JS and dependencies -->

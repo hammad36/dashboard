@@ -13,13 +13,4 @@ class productUpdate extends product
             exit();
         }
     }
-
-
-    public function updateProductQuantity($productId, $quantity)
-    {
-        $query = "UPDATE Product SET pro_quantity = pro_quantity - ? WHERE pro_id = ?";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("ii", $quantity, $productId);
-        return $stmt->execute();
-    }
 }

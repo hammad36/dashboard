@@ -127,3 +127,18 @@ button:hover {
         opacity: 1;
     }
 }
+
+
+@media screen and (max-width: 767px) {
+    table {
+        font-size: 12px;
+    }
+
+    table td {
+        padding: 8px;
+    }
+
+    table th {
+        font-size: 13px;
+    }
+}

@@ -72,7 +72,9 @@ label {
     font-weight: bold;
     margin-bottom: 5px;
 }
-
+.text-center {
+    text-align: center;
+}
 input[type="text"],
 input[type="number"],
 input[type="file"],
@@ -129,5 +131,19 @@ button:hover {
     }
     to {
         opacity: 1;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    table {
+        font-size: 12px;
+    }
+
+    table td {
+        padding: 8px;
+    }
+
+    table th {
+        font-size: 13px;
     }
 }
