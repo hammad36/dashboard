@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Validate input fields
-    if (empty($clientName) || empty($clientEmail) || empty($productSelect) || empty($quantity) || empty($price) || empty($totalPrice)) {
+    if (empty($clientName) || empty($clientEmail) || empty($productSelect) || empty($quantity) || empty($price) || empty($totalPrice) || !is_numeric($totalPrice) || $totalPrice <= 0) {
         header("Location: ilist.php?error=Please ensure all fields are completed before submitting. Kindly try again.");
         exit();
     }
