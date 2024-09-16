@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
             totalPrice += productPrice;
         });
 
-        totalPriceInput.value = totalPrice.toFixed(2);
+        updateTotalPrice();
     }
 
     function updateTotalPrice() {
@@ -60,5 +60,18 @@ document.addEventListener('DOMContentLoaded', function() {
         totalPriceInput.value = totalPrice.toFixed(2);
     }
 
-    updateTotalPrice();
+    document.getElementById('invoiceForm').addEventListener('submit', function(event) {
+        const products = document.querySelectorAll('#productDetails input[name^="quantity"]');
+        products.forEach(function(product) {
+            const quantity = parseInt(product.value, 10);
+            const maxQuantity = parseInt(product.max, 10);
+            
+            if (quantity < 1 || quantity > maxQuantity) {
+                alert('Invalid quantity for product: ' + product.id);
+                event.preventDefault(); // Prevent form submission if validation fails
+            }
+        });
+    });
+
+    updateProductDetails(); // Initialize product details and total price
 });

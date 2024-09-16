@@ -26,43 +26,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prices = isset($_POST['price']) ? $_POST['price'] : [];
     $totalPrice = isset($_POST['totalPrice']) ? $_POST['totalPrice'] : 0;
 
-
+    // Validate quantities and prices
     foreach ($productIds as $index => $productId) {
-        // If the product exists in the original invoice (before modification)
-        if (isset($originalQuantities[$productId])) {
-            // Only check the quantity if the product was already part of the original invoice
-            if ($quantities[$index] < $originalQuantities[$productId]) {
-                // If the new quantity is less than the original, it's unauthorized
-                header("Location: ilist.php?error=Unauthorized modification of quantities detected.");
+        $quantity = $quantities[$index];
+        $price = $prices[$index];
+
+        // Check for unauthorized quantity modifications
+        if (isset($originalQuantities[$productId]) && $quantity < $originalQuantities[$productId]) {
+            header("Location: ilist.php?error=Unauthorized modification of quantities detected.");
+            exit();
+        }
+
+        // Validate price against the database
+        $productQuery = "SELECT pro_price, pro_quantity FROM Product WHERE pro_id = ? LIMIT 1";
+        $stmt = $conn->prepare($productQuery);
+        $stmt->bind_param("i", $productId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $availableQuantity = $row['pro_quantity'];
+            $dbPrice = $row['pro_price'];
+
+            if ($quantity > $availableQuantity) {
+                header("Location: ilist.php?error=Quantity for product ID $productId exceeds available stock.");
+                exit();
+            }
+
+            if (abs($price - $dbPrice) > 0.01) { // Allowing a small margin for floating-point comparisons
+                header("Location: ilist.php?error=Price mismatch detected for product ID $productId.");
                 exit();
             }
         } else {
-            // New product added - validate the new product's availability
-            $productQuery = "SELECT pro_quantity FROM Product WHERE pro_id = ? LIMIT 1";
-            $stmt = $conn->prepare($productQuery);
-            $stmt->bind_param("i", $productId);
-            $stmt->execute();
-            $result = $stmt->get_result();
-
-            if ($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                $availableQuantity = $row['pro_quantity'];
-
-                // Check if the quantity requested for the new product is within available stock
-                if ($quantities[$index] > $availableQuantity) {
-                    header("Location: ilist.php?error=Quantity for product ID $productId exceeds available stock.");
-                    exit();
-                }
-            } else {
-                // If the product ID doesn't exist in the database, throw an error
-                header("Location: ilist.php?error=Invalid product ID $productId.");
-                exit();
-            }
+            header("Location: ilist.php?error=Invalid product ID $productId.");
+            exit();
         }
     }
 
-
-
+    // Check if total price is correct
     if (empty($invoiceNumber) || empty($clientName) || empty($clientEmail) || empty($productIds) || empty($quantities) || empty($prices) || !is_numeric($totalPrice) || $totalPrice <= 0) {
         header("Location: ilist.php?error=Please ensure all fields are completed before submitting. Kindly try again.");
         exit();
@@ -72,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: ilist.php?edit=$message");
     exit();
 }
+
 
 $invoice = $invoiceFetcher->fetchInvoiceDetails($id);
 
