@@ -32,8 +32,8 @@
 
 
         <div class=" btns" style="display: flex; justify-content:space-between;">
-            <a href="add_new.php" class="btn btn-dark">Add New Product</a>
-            <a href="../../../index.php" class="btn btn-dark">back</a>
+            <a href="addNew.html" class="btn btn-dark">Add New Product</a>
+            <a href="../../../index.html" class="btn btn-dark">back</a>
         </div>
 
         <div class="table-responsive">
