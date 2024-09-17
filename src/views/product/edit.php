@@ -1,3 +1,15 @@
+<?php
+include "../../../DB/Connection.php";
+include "../../classes/product/productRetrieve.php";
+
+$dbConnection = Connection::getInstance();
+$conn = $dbConnection->getConnection();
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+$productRetrieve = new productRetrieve($conn);
+$row = $productRetrieve->getProductbyID($id);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,9 +40,7 @@
             <p class="desc">Edit the details to update the product information.</p>
         </div>
 
-
-
-        <form action="editHandler.php" method="post">
+        <form action="editHandler.php?id=<?php echo $id; ?>" method="post">
             <div class="row">
                 <div class="column">
                     <label for="pro_name">Product Name</label>

@@ -21,9 +21,10 @@ if (isset($_POST['submit'])) {
 
     $productUPdate = new productUpdate($conn);
     $productUPdate->updateProduct($id, $pro_name, $description, $pro_quantity, $pro_price);
+
+    header("Location: plist.php?success=Product updated successfully.");
+    exit();
 }
 
 $productRetrieve = new productRetrieve($conn);
 $row = $productRetrieve->getProductbyID($id);
-
-$dbConnection->close();
