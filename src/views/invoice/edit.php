@@ -26,14 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prices = isset($_POST['price']) ? $_POST['price'] : [];
     $totalPrice = isset($_POST['totalPrice']) ? $_POST['totalPrice'] : 0;
 
-    // Validate quantities and prices
     foreach ($productIds as $index => $productId) {
         $quantity = $quantities[$index];
         $price = $prices[$index];
 
-
-
-        // Validate price against the database
         $productQuery = "SELECT pro_price, pro_quantity FROM Product WHERE pro_id = ? LIMIT 1";
         $stmt = $conn->prepare($productQuery);
         $stmt->bind_param("i", $productId);
@@ -50,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit();
             }
 
-            if (abs($price - $dbPrice) > 0.01) { // Allowing a small margin for floating-point comparisons
+            if (abs($price - $dbPrice) > 0.01) {
                 header("Location: ilist.php?error=Price mismatch detected for product ID $productId.");
                 exit();
             }
@@ -60,7 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Check if total price is correct
     if (empty($invoiceNumber) || empty($clientName) || empty($clientEmail) || empty($productIds) || empty($quantities) || empty($prices) || !is_numeric($totalPrice) || $totalPrice <= 0) {
         header("Location: ilist.php?error=Please ensure all fields are completed before submitting. Kindly try again.");
         exit();
@@ -70,7 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: ilist.php?edit=$message");
     exit();
 }
-
 
 $invoice = $invoiceFetcher->fetchInvoiceDetails($id);
 
