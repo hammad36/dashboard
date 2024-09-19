@@ -28,7 +28,7 @@
         ?>
 
         <div class="constainer" style="display: flex; justify-content:space-between;">
-            <a href="invo.php" class="btn btn-dark">Add New Invoice</a>
+            <a href="createInvoice.php" class="btn btn-dark">Add New Invoice</a>
             <a href="../../../index.html" class="btn btn-dark">back</a>
         </div>
 

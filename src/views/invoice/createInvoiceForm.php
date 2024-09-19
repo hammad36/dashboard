@@ -1,68 +1,3 @@
-<?php
-include "../../../DB/Connection.php";
-include "../../classes/product/product.php";
-include "../../classes/product/productRetrieve.php";
-include "../../classes/product/productUpdate.php";
-include "../../classes/invoice/invoiceController.php";
-include "../../classes/invoice/invoiceCreator.php";
-include "../../classes/invoice/invoiceNumberGenerator.php";
-include "../../classes/invoice/invoiceValidator.php";
-
-$dbConnection = Connection::getInstance();
-$conn = $dbConnection->getConnection();
-
-$productRetrieve = new productRetrieve($conn);
-$productUpdate = new productUpdate($conn);
-$invoiceNumberGenerator = new invoiceNumberGenerator($conn);
-$invoiceValidator = new invoiceValidator($productRetrieve);
-$invoiceCreator = new invoiceCreator($conn, $productUpdate);
-$invoiceController = new invoiceController($invoiceNumberGenerator, $invoiceValidator, $invoiceCreator);
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $clientName = isset($_POST['clientName']) ? $_POST['clientName'] : '';
-    $clientEmail = isset($_POST['clientEmail']) ? $_POST['clientEmail'] : '';
-    $productSelect = isset($_POST['productSelect']) ? $_POST['productSelect'] : [];
-    $quantity = isset($_POST['quantity']) ? $_POST['quantity'] : [];
-    $price = isset($_POST['price']) ? $_POST['price'] : [];
-    $totalPrice = isset($_POST['totalPrice']) ? $_POST['totalPrice'] : 0;
-
-    // Ensure the total price is calculated correctly on the server-side
-    $calculatedTotalPrice = 0;
-    foreach ($productSelect as $index => $productId) {
-        $productRow = $productRetrieve->getProductDetails($productId);
-        $pricePerItem = $productRow['pro_price'];
-        $quantityForProduct = $quantity[$index];
-        $calculatedTotalPrice += $pricePerItem * $quantityForProduct;
-    }
-
-    // Check if the provided total price matches the calculated total price
-    if ($totalPrice != $calculatedTotalPrice) {
-        header("Location: ilist.php?error=Calculated total price does not match the provided total price. Kindly try again.");
-        exit();
-    }
-
-    // Validate input fields
-    if (empty($clientName) || empty($clientEmail) || empty($productSelect) || empty($quantity) || empty($price) || empty($totalPrice) || !is_numeric($totalPrice) || $totalPrice <= 0) {
-        header("Location: ilist.php?error=Please ensure all fields are completed before submitting. Kindly try again.");
-        exit();
-    }
-
-    try {
-        $invoiceValidator->validateQuantities($productSelect, $quantity);
-        $invoiceController->createInvoice($clientName, $clientEmail, $productSelect, $quantity, [], $totalPrice);
-        header("Location: ilist.php?success=Invoice created successfully.");
-        exit();
-    } catch (Exception $e) {
-        echo '<p class="description text-center">Failed to create invoice: ' . $e->getMessage() . '</p>';
-    }
-}
-
-$productResult = $productRetrieve->getProducts();
-$newInvoiceNumber = $invoiceNumberGenerator->generateNewInvoiceNumber();
-
-$dbConnection->close();
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -83,12 +18,12 @@ $dbConnection->close();
         <p class="mp">Create New Invoice</p>
     </nav>
     <div class="container">
-        <div class=" btns" style="display: flex; justify-content:flex-end; margin-bottom: -40px;">
+        <div class="btns" style="display: flex; justify-content:flex-end; margin-bottom: -40px;">
             <a href="./ilist.php" class="btn btn-dark">back</a>
         </div>
         <h1 class="title text-center">Create New Invoice</h1>
         <p class="description text-center">Fill in the details below to create a new invoice.</p>
-        <form id="invoiceForm" class="formInt" method="POST" action="">
+        <form id="invoiceForm" class="formInt" method="POST" action="createInvoice.php">
             <div class="row">
                 <div class="column">
                     <label for="invoiceNumber">Invoice Number</label>
@@ -118,8 +53,7 @@ $dbConnection->close();
                             if ($productResult->num_rows > 0) {
                                 while ($row = $productResult->fetch_assoc()) {
                                     $availableQuantity = $row["pro_quantity"] - $row["total_sold"];
-                                    echo '<option value="' . $row["pro_id"] . '" data-price="' . $row["pro_price"] .
-                                        '" data-quantity="' . $availableQuantity . '">' . $row["pro_name"] . '</option>';
+                                    echo '<option value="' . $row["pro_id"] . '" data-price="' . $row["pro_price"] . '" data-quantity="' . $availableQuantity . '">' . $row["pro_name"] . '</option>';
                                 }
                             } else {
                                 echo '<option value="" disabled>No products available</option>';
@@ -145,3 +79,5 @@ $dbConnection->close();
     <script src="../../../assets/js/invo.js"></script>
 
 </body>
+
+</html>
