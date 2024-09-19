@@ -31,11 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $quantity = $quantities[$index];
         $price = $prices[$index];
 
-        // Check for unauthorized quantity modifications
-        if (isset($originalQuantities[$productId]) && $quantity < $originalQuantities[$productId]) {
-            header("Location: ilist.php?error=Unauthorized modification of quantities detected.");
-            exit();
-        }
+
 
         // Validate price against the database
         $productQuery = "SELECT pro_price, pro_quantity FROM Product WHERE pro_id = ? LIMIT 1";
@@ -133,16 +129,16 @@ $existingProducts = $invoiceFetcher->fetchExistingProducts($id);
             <div id="productsContainer">
                 <div class="row">
                     <div class="column">
-                        <label for="productSelect">Select Products <span class="description text-center"> (To modify quantities, please reselect the products.) </span></label>
+                        <label for="productSelect">Select Products</label>
                         <select id="productSelect" name="productSelect[]" multiple required>
                             <?php
                             if ($products->num_rows > 0) {
-                                while ($row = $products->fetch_assoc()) {
+                                foreach ($products as $row) {
                                     $selected = isset($existingProducts[$row['pro_id']]) ? 'selected' : '';
-                                    $availableQuantity = $row["pro_quantity"] - $row["total_sold"];
-                                    echo '<option value="' . $row["pro_id"] . '" data-price="' . $row["pro_price"] .
-                                        '" data-quantity="' . $availableQuantity . '" ' . $selected . '>' . $row["pro_name"] .
-                                        '</option>';
+                                    $existingQuantity = isset($existingProducts[$row['pro_id']]) ? $existingProducts[$row['pro_id']]['quantity'] : 0;
+                                    $availableQuantity = $row['pro_quantity'] - $row['total_sold'];
+
+                                    echo '<option value="' . $row['pro_id'] . '" data-price="' . $row['pro_price'] . '" data-quantity="' . $availableQuantity . '" data-existing-quantity="' . $existingQuantity . '" ' . $selected . '>' . $row['pro_name'] . '</option>';
                                 }
                             } else {
                                 echo '<option value="" disabled>No products available</option>';

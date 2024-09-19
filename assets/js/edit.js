@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const productName = option.text;
             const productPrice = parseFloat(option.getAttribute('data-price'));
             const availableQuantity = parseInt(option.getAttribute('data-quantity'));
+            const existingQuantity = parseInt(option.getAttribute('data-existing-quantity')) || 1; // Default to 1 if no existing quantity
 
             const container = document.createElement('div');
             container.classList.add('row');
@@ -25,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
             container.innerHTML = `
                 <div class="column">
                     <label for="quantity_${productId}">${productName} Quantity (Available: ${availableQuantity})</label>
-                    <input type="number" id="quantity_${productId}" name="quantity[]" data-price="${productPrice}" min="1" max="${availableQuantity}" required>
+                    <input type="number" id="quantity_${productId}" name="quantity[]" data-price="${productPrice}" min="1" max="${availableQuantity}" value="${existingQuantity}" required>
                 </div>
                 <div class="column">
                     <label for="price_${productId}">${productName} Price</label>
@@ -40,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateTotalPrice();
             });
 
-            totalPrice += productPrice;
+            totalPrice += existingQuantity * productPrice;
         });
 
         updateTotalPrice();
@@ -65,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
         products.forEach(function(product) {
             const quantity = parseInt(product.value, 10);
             const maxQuantity = parseInt(product.max, 10);
-            
+
             if (quantity < 1 || quantity > maxQuantity) {
                 alert('Invalid quantity for product: ' + product.id);
                 event.preventDefault(); 
