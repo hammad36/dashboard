@@ -66,7 +66,7 @@
                                 <a href="edit.php?inv_number=<?php echo $row['inv_number'] ?>" class="link-dark">
                                     <i class="fa-solid fa-pen-to-square fs-5 me-3"></i>
                                 </a>
-                                <a href="../../classes/invoice/deleteInvoice.php?inv_number=<?php echo $row['inv_number'] ?>" class="link-dark">
+                                <a href="deleteInvoice.php?inv_number=<?php echo $row['inv_number'] ?>" class="link-dark">
                                     <i class="fa-solid fa-trash fs-5"></i>
                                 </a>
                             </td>

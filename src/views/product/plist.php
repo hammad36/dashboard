@@ -69,7 +69,7 @@
                                 <a href="edit.php?id=<?php echo $row['pro_id'] ?>" class="link-dark">
                                     <i class="fa-solid fa-pen-to-square fs-5 me-3"></i>
                                 </a>
-                                <a href="../../classes/product/deleteProduct.php?id=<?php echo $row['pro_id'] ?>" class="link-dark">
+                                <a href="deleteProduct.php?id=<?php echo $row['pro_id'] ?>" class="link-dark">
                                     <i class="fa-solid fa-trash fs-5"></i>
                                 </a>
                             </td>

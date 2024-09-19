@@ -68,10 +68,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (quantity < 1 || quantity > maxQuantity) {
                 alert('Invalid quantity for product: ' + product.id);
-                event.preventDefault(); // Prevent form submission if validation fails
+                event.preventDefault(); 
             }
         });
     });
 
-    updateProductDetails(); // Initialize product details and total price
+    updateProductDetails();
 });

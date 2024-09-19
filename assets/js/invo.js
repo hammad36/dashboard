@@ -71,7 +71,7 @@ document.getElementById('invoiceForm').addEventListener('submit', function(event
         
         if (quantity < 1 || quantity > maxQuantity) {
             alert('Invalid quantity for product: ' + product.id);
-            event.preventDefault(); // Prevent form submission if validation fails
+            event.preventDefault(); 
         }
     });
 });
