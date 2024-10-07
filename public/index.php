@@ -1,3 +1,21 @@
+<?php
+
+namespace dashboard;
+
+use dashboard\lib\frontcontroller;
+
+if (!defined('DS')) {
+    define('DS', DIRECTORY_SEPARATOR);
+}
+
+require_once '..' . DS . 'app' . DS . 'config.php';
+require_once APP_PATH . DS . 'lib' . DS . 'autoload.php';
+
+$frontcontroller = new frontcontroller();
+$frontcontroller->dispatch();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +29,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <title>Dashboard</title>
-    <link rel="stylesheet" href="./assets/css/index.css">
+    <link rel="stylesheet" href="../assets/css/index.css">
 </head>
 
 <body>
