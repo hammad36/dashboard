@@ -5,6 +5,9 @@ namespace dashboard\lib;
 class frontController
 {
 
+    const NOT_FOUND_ACTION = 'notFoundAction';
+    const NOT_FOUND_CONTROLLER = 'dashboard\controllers\\notFoundController';
+
     private $_controller = 'index';
     private $_action = 'default';
     private $_params = array();
@@ -34,11 +37,11 @@ class frontController
         $actionName = $this->_action . 'Action';
 
         if (!class_exists($controllerClassName)) {
-            $controllerClassName = 'dashboard\controllers\\notFoundController';
+            $controllerClassName = self::NOT_FOUND_CONTROLLER;
         }
         $controller = new $controllerClassName();
         if (!method_exists($controller, $actionName)) {
-            $actionName = 'notFoundAction';
+            $this->_action = $actionName = self::NOT_FOUND_ACTION;
         }
         $controller->setController($this->_controller);
         $controller->setAction($this->_action);

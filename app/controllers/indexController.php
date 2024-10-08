@@ -9,4 +9,9 @@ class indexController extends abstractController
     {
         $this->_view();
     }
+
+    public function addAction()
+    {
+        $this->_view();
+    }
 }

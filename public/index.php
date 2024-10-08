@@ -2,7 +2,7 @@
 
 namespace dashboard;
 
-use dashboard\lib\frontcontroller;
+use dashboard\lib\frontController;
 
 if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
@@ -11,8 +11,8 @@ if (!defined('DS')) {
 require_once '..' . DS . 'app' . DS . 'config.php';
 require_once APP_PATH . DS . 'lib' . DS . 'autoload.php';
 
-$frontcontroller = new frontcontroller();
-$frontcontroller->dispatch();
+$frontController = new frontController();
+$frontController->dispatch();
 
 ?>
 

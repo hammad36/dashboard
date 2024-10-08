@@ -2,6 +2,7 @@
 
 namespace dashboard\controllers;
 
+use dashboard\lib\frontController;
 
 class abstractController
 {
@@ -31,6 +32,15 @@ class abstractController
 
     public function _view()
     {
-        echo VIEWS_PATH . $this->_controller, $this->_action;
+        if ($this->_action == frontController::NOT_FOUND_ACTION) {
+            require_once VIEWS_PATH . 'notFound' . DS . 'notFound.view.php';
+        } else {
+            $view = VIEWS_PATH . $this->_controller . DS . $this->_action . '.view.php';
+            if (file_exists($view)) {
+                require_once $view;
+            } else {
+                require_once VIEWS_PATH . 'notFound' . DS . 'noView.view.php';
+            }
+        }
     }
 }
