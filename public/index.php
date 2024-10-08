@@ -40,8 +40,8 @@ $frontController->dispatch();
         <h1 class="title">Welcome to the Dashboard</h1>
         <p class="desc">Choose an option below to manage products or invoices.</p>
         <div class="d-flex justify-content-center mt-4">
-            <button onclick="location.href='src/views/product/plist.php'" class="btn btn-dark mx-2">Product List</button>
-            <button onclick="location.href='src/views/invoice/ilist.php'" class="btn btn-dark mx-2">Invoice List</button>
+            <button onclick="location.href='../src/views/product/plist.php'" class="btn btn-dark mx-2">Product List</button>
+            <button onclick="location.href='../src/views/invoice/ilist.php'" class="btn btn-dark mx-2">Invoice List</button>
         </div>
     </div>
 </body>

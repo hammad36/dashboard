@@ -4,10 +4,8 @@ namespace dashboard\lib;
 
 class frontController
 {
-
     const NOT_FOUND_ACTION = 'notFoundAction';
     const NOT_FOUND_CONTROLLER = 'dashboard\controllers\\notFoundController';
-
     private $_controller = 'index';
     private $_action = 'default';
     private $_params = array();

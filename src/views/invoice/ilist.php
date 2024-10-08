@@ -9,7 +9,7 @@
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Manage Invoices</title>
-    <link rel="stylesheet" href="../../../assets//css//Istyles.css">
+    <link rel="stylesheet" href="../../../assets/css/Istyles.css">
 </head>
 
 <body>
