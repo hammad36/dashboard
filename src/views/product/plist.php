@@ -69,7 +69,7 @@
                                 <a href="edit.php?id=<?php echo $row['pro_id'] ?>" class="link-dark">
                                     <i class="fa-solid fa-pen-to-square fs-5 me-3"></i>
                                 </a>
-                                <a href="../../classes/product/deleteProduct.php?id=<?php echo $row['pro_id'] ?>" class="link-dark">
+                                <a href="../../classes/product/deleteProduct.php?id=<?php echo $row['pro_id'] ?>" class="link-dark" title="Delete" onclick="return confirm('Are you sure you want to delete this employee?');">
                                     <i class="fa-solid fa-trash fs-5"></i>
                                 </a>
                             </td>

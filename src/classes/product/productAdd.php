@@ -1,5 +1,6 @@
 <?php
 include_once "product.php";
+require_once '../../../app/models/abstractModel.php';
 class productAdd extends product
 {
     public function addProduct($productName, $description, $quantity, $price)

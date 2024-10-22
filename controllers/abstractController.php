@@ -1,8 +1,8 @@
 <?php
 
-namespace dashboard\controllers;
+namespace dash\controllers;
 
-use dashboard\lib\frontController;
+use dash\lib\frontController;
 
 class abstractController
 {
@@ -12,7 +12,7 @@ class abstractController
 
     public function notFoundAction()
     {
-        echo 'Sorry this page doesn\'t exists';
+        $this->_view();
     }
 
     public function setController($controllerName)

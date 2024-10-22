@@ -1,6 +1,6 @@
 <?php
 
-namespace dashboard\controllers;
+namespace dash\controllers;
 
 class indexController extends abstractController
 {

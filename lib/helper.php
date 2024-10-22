@@ -1,6 +1,6 @@
 <?php
 
-namespace dashboard\lib;
+namespace dash\lib;
 
 trait helper
 {

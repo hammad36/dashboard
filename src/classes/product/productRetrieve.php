@@ -29,11 +29,22 @@ class productRetrieve extends product
                     LEFT JOIN Invoice_Product ip ON p.pro_id = ip.pro_id 
                     WHERE p.pro_id = ? 
                     GROUP BY p.pro_id, p.pro_quantity";
+
         $stmt = $this->conn->prepare($query);
         $stmt->bind_param("i", $productId);
         $stmt->execute();
         return $stmt->get_result()->fetch_assoc();
     }
+
+    // public function ProductQuantity($inv_number)
+    // {
+    //     $query = "SELECT SUM(quantity) AS TotalQuantity FROM invoice_product WHERE inv_number = ?;";
+
+    //     $stmt = $this->conn->prepare($query);
+    //     $stmt->bind_param("i", $inv_number);
+    //     $stmt->execute();
+    //     return $stmt->get_result()->fetch_assoc();
+    // }
 
 
     public function getProductPrice($productId)
