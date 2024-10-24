@@ -15,13 +15,18 @@ class frontController
         $this->_parseUrl();
     }
 
-    private function _parseUrl()
+    public function _parseUrl()
     {
         $url = explode('/', trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'), 3);
-        $this->_controller = $url[0] ?? null;
-        $this->_action = $url[1] ?? null;
-        if (isset($url[2])) {
-            $url[2] = explode('/', $url[2]);
+        if (isset($url[0]) && $url[0] != '') {
+            $this->_controller = $url[0];
+        }
+        if (isset($url[1]) && $url[1] != '') {
+            $this->_action = $url[1];
+        }
+        if (isset($url[2]) && $url[2] != '') {
+            $explodedParams = explode('/', $url[2]);
+            $this->_params = $explodedParams;
         }
     }
 
@@ -29,9 +34,12 @@ class frontController
     {
         $controllerClassName = 'dash\controllers\\' . $this->_controller . 'Controller';
         $actionName = $this->_action . 'Action';
+
         if (!class_exists($controllerClassName)) {
             $controllerClassName = self::NOT_FOUND_CONTROLLER;
+            // $controllerClassName = self::NOT_FOUND_CONTROLLER or 'dash\controllers\\notFoundController';
         }
+
         $controller = new $controllerClassName();
         if (!method_exists($controller, $actionName)) {
             $this->_action = $actionName = self::NOT_FOUND_ACTION;

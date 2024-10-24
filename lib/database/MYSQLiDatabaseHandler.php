@@ -1,5 +1,8 @@
 <?php
 
+namespace dash\lib\database;
+
+
 class MYSQLiDatabaseHandler extends databaseHandler
 {
     private static $_handler;
@@ -12,12 +15,12 @@ class MYSQLiDatabaseHandler extends databaseHandler
     protected static function init()
     {
         try {
-            self::$_handler = new PDO(
+            self::$_handler = new \PDO(
                 'mysql://hostname=' . DATABASE_HOST_NAME . ';dbname=' . DATABASE_DB_NAME,
                 DATABASE_USER_NAME,
                 DATABASE_PASSWORD
             );
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
         }
     }
 

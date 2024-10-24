@@ -1,5 +1,7 @@
 <?php
 
+namespace dash\lib\database;
+
 abstract class databaseHandler
 {
     const DATABASE_DRIVER_PDO = 1;

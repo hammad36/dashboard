@@ -1,14 +1,17 @@
 <?php
-require_once '../../DB/Connection2.php';
+
+namespace dash\models;
+
+use dash\lib\database\databaseHandler;
 
 class abstractModel
 {
-    const DATA_TYPE_BOOL = PDO::PARAM_BOOL;
-    const DATA_TYPE_STR = PDO::PARAM_STR;
-    const DATA_TYPE_INT = PDO::PARAM_INT;
+    const DATA_TYPE_BOOL = \PDO::PARAM_BOOL;
+    const DATA_TYPE_STR = \PDO::PARAM_STR;
+    const DATA_TYPE_INT = \PDO::PARAM_INT;
     const DATA_TYPE_DECIMAL = 4;
-    const DATA_TYPE_DATE = PDO::PARAM_STR;
-    const DATA_TYPE_NULL = PDO::PARAM_NULL;
+    const DATA_TYPE_DATE = \PDO::PARAM_STR;
+    const DATA_TYPE_NULL = \PDO::PARAM_NULL;
 
     // Static property to hold the connection
     protected static $connection;
@@ -17,7 +20,7 @@ class abstractModel
     protected static function getConnection()
     {
         if (self::$connection === null) {
-            self::$connection = Connection2::getInstance()->getConnection();
+            self::$connection = databaseHandler::factory();
         }
         return self::$connection;
     }
@@ -37,7 +40,7 @@ class abstractModel
         return $result;
     }
 
-    private function prepareValues(PDOStatement &$stmt)
+    private function prepareValues(\PDOStatement &$stmt)
     {
         foreach (static::$tableSchema as $columnName => $type) {
             if ($type == self::DATA_TYPE_DECIMAL) {
@@ -100,7 +103,7 @@ class abstractModel
             $sql = 'SELECT * FROM ' . static::$tableName;
             $stmt = $connection->prepare($sql);
             $stmt->execute();
-            $results = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, get_called_class(), array_keys(static::$tableSchema));
+            $results = $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, get_called_class(), array_keys(static::$tableSchema));
             return (is_array($results) && !empty($results)) ? $results : false;
         });
     }
@@ -111,7 +114,7 @@ class abstractModel
             $sql = 'SELECT * FROM ' . static::$tableName . ' WHERE ' . static::$primaryKey . ' = "' . $pk . '"';
             $stmt = $connection->prepare($sql);
             if ($stmt->execute() === true) {
-                $obj = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, get_called_class(), array_keys(static::$tableSchema));
+                $obj = $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, get_called_class(), array_keys(static::$tableSchema));
                 return array_shift($obj);
             }
             return false;
@@ -133,7 +136,7 @@ class abstractModel
                 }
             }
             $stmt->execute();
-            $results = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, get_called_class(), array_keys(static::$tableSchema));
+            $results = $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, get_called_class(), array_keys(static::$tableSchema));
             return (is_array($results) && !empty($results)) ? $results : false;
         });
     }

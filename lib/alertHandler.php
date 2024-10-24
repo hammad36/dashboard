@@ -1,5 +1,7 @@
 <?php
 
+namespace dash\lib;
+
 class alertHandler
 {
     public function displayAlert($type, $message)

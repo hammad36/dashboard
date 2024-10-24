@@ -1,7 +1,10 @@
 <?php
+
+namespace dash\models;
+
 require_once 'abstractModel.php';
 
-class invoice extends abstractModel
+class invoiceModel extends abstractModel
 {
     private $inv_number;
     private $client_name;
@@ -52,11 +55,3 @@ class invoice extends abstractModel
         $this->client_name = $client_name;
     }
 }
-
-$p1 = invoice::getByPK(7);
-$p1->clientName('AhmedAhmedAhmed');
-$p1->save();
-
-echo '<pre>';
-var_dump($p1);
-echo '</pre>';
