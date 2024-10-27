@@ -4,19 +4,17 @@ namespace dash\models;
 
 use dash\lib\database\databaseHandler;
 
-class abstractModel
+abstract class abstractModel
 {
-    const DATA_TYPE_BOOL = \PDO::PARAM_BOOL;
-    const DATA_TYPE_STR = \PDO::PARAM_STR;
-    const DATA_TYPE_INT = \PDO::PARAM_INT;
+    const DATA_TYPE_BOOL    = \PDO::PARAM_BOOL;
+    const DATA_TYPE_STR     = \PDO::PARAM_STR;
+    const DATA_TYPE_INT     = \PDO::PARAM_INT;
     const DATA_TYPE_DECIMAL = 4;
-    const DATA_TYPE_DATE = \PDO::PARAM_STR;
-    const DATA_TYPE_NULL = \PDO::PARAM_NULL;
+    const DATA_TYPE_DATE    = \PDO::PARAM_STR;
+    const DATA_TYPE_NULL    = \PDO::PARAM_NULL;
 
-    // Static property to hold the connection
     protected static $connection;
 
-    // Method to get or initialize the connection
     protected static function getConnection()
     {
         if (self::$connection === null) {
@@ -25,76 +23,78 @@ class abstractModel
         return self::$connection;
     }
 
-    // Method to close the connection
     protected static function closeConnection()
     {
         self::$connection = null;
     }
 
-    // Centralized method to handle connection lifecycle
     protected static function executeWithConnection($callback)
     {
-        $connection = self::getConnection(); // Ensure connection is initialized
+        $connection = self::getConnection();
         $result = $callback($connection);
         self::closeConnection();
         return $result;
     }
 
-    private function prepareValues(\PDOStatement &$stmt)
+    protected function bindValues(\PDOStatement &$stmt)
     {
         foreach (static::$tableSchema as $columnName => $type) {
-            if ($type == self::DATA_TYPE_DECIMAL) {
-                $sanitizedValue = filter_var($this->$columnName, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-                $stmt->bindValue(":{$columnName}", $sanitizedValue, $type);
-            } else {
-                $stmt->bindValue(":{$columnName}", $this->$columnName, $type);
+            $value = $this->$columnName;
+
+            if ($type === self::DATA_TYPE_DECIMAL) {
+                $value = filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
             }
+
+            $stmt->bindValue(":{$columnName}", $value, $type);
         }
     }
 
-    private static function buildNameParametersSQL()
+    protected static function buildNamedParameters()
     {
-        $namedParams = '';
-        foreach (static::$tableSchema as $columnName => $type) {
-            $namedParams .= $columnName . ' = :' . $columnName . ', ';
+        return implode(', ', array_map(fn($col) => "$col = :$col", array_keys(static::$tableSchema)));
+    }
+
+    protected function executeSaveQuery($sql)
+    {
+        $stmt = self::getConnection()->prepare($sql);
+        $this->bindValues($stmt);
+        $stmt->execute();
+        return $stmt;
+    }
+
+    protected function create()
+    {
+        $sql = 'INSERT INTO ' . static::$tableName . ' SET ' . self::buildNamedParameters();
+        $stmt = $this->executeSaveQuery($sql);
+
+        if ($stmt->rowCount() > 0) {
+            $this->{static::$primaryKey} = self::getConnection()->lastInsertId();
+            return true;
         }
-        return trim($namedParams, ', ');
+
+        return false;
     }
 
-    private function create()
+    protected function update()
     {
-        $sql = 'INSERT INTO ' . static::$tableName . ' SET ' . self::buildNameParametersSQL();
+        $sql = 'UPDATE ' . static::$tableName . ' SET ' . self::buildNamedParameters() . ' WHERE ' . static::$primaryKey . ' = :' . static::$primaryKey;
         $stmt = self::getConnection()->prepare($sql);
-        $this->prepareValues($stmt);
-        $result = $stmt->execute();
-        self::closeConnection();
-        return $result;
-    }
-
-    private function update()
-    {
-        $sql = 'UPDATE ' . static::$tableName . ' SET ' . self::buildNameParametersSQL() . ' WHERE ' . static::$primaryKey . ' = ' . $this->{static::$primaryKey};
-        $stmt = self::getConnection()->prepare($sql);
-        $this->prepareValues($stmt);
-        $result = $stmt->execute();
-        self::closeConnection();
-        return $result;
+        $this->bindValues($stmt);
+        $stmt->bindValue(':' . static::$primaryKey, $this->{static::$primaryKey}, self::DATA_TYPE_INT);
+        return $stmt->execute();
     }
 
     public function save()
     {
-        $result = $this->{static::$primaryKey} === null ? $this->create() : $this->update();
-        self::closeConnection();
-        return $result;
+        return $this->{static::$primaryKey} === null ? $this->create() : $this->update();
     }
 
     public function delete()
     {
-        $sql = 'DELETE FROM ' . static::$tableName . ' WHERE ' . static::$primaryKey . ' = ' . $this->{static::$primaryKey};
+        $sql = 'DELETE FROM ' . static::$tableName . ' WHERE ' . static::$primaryKey . ' = :' . static::$primaryKey;
         $stmt = self::getConnection()->prepare($sql);
-        $result = $stmt->execute();
-        self::closeConnection();
-        return $result;
+        $stmt->bindValue(':' . static::$primaryKey, $this->{static::$primaryKey}, self::DATA_TYPE_INT);
+        return $stmt->execute();
     }
 
     public static function getAll()
@@ -103,41 +103,43 @@ class abstractModel
             $sql = 'SELECT * FROM ' . static::$tableName;
             $stmt = $connection->prepare($sql);
             $stmt->execute();
-            $results = $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, get_called_class(), array_keys(static::$tableSchema));
-            return (is_array($results) && !empty($results)) ? $results : false;
+            return $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, get_called_class());
         });
     }
 
     public static function getByPK($pk)
     {
         return self::executeWithConnection(function ($connection) use ($pk) {
-            $sql = 'SELECT * FROM ' . static::$tableName . ' WHERE ' . static::$primaryKey . ' = "' . $pk . '"';
+            $sql = 'SELECT * FROM ' . static::$tableName . ' WHERE ' . static::$primaryKey . ' = :pk';
             $stmt = $connection->prepare($sql);
+            $stmt->bindValue(':pk', $pk, self::DATA_TYPE_INT);
             if ($stmt->execute() === true) {
-                $obj = $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, get_called_class(), array_keys(static::$tableSchema));
-                return array_shift($obj);
+                if (method_exists(get_called_class(), '__construct')) {
+                    $obj = $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, get_called_class(), array_keys(static::$tableSchema));
+                } else {
+                    $obj = $stmt->fetchAll(\PDO::FETCH_CLASS, get_called_class());
+                }
+                return !empty($obj) ? array_shift($obj) : false;
             }
             return false;
         });
     }
 
-    public static function get($sql, $options = array())
+    public static function get($sql, $params = [])
     {
-        return self::executeWithConnection(function ($connection) use ($sql, $options) {
+        return self::executeWithConnection(function ($connection) use ($sql, $params) {
             $stmt = $connection->prepare($sql);
-            if (!empty($options)) {
-                foreach ($options as $columnName => $type) {
-                    if ($type[0] == 4) {
-                        $sanitizedValue = filter_var($type[1], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-                        $stmt->bindValue(":{$columnName}", $sanitizedValue, $type[0]);
-                    } else {
-                        $stmt->bindValue(":{$columnName}", $type[1], $type[0]);
-                    }
-                }
+
+            foreach ($params as $columnName => $type) {
+                $value = ($type[0] === self::DATA_TYPE_DECIMAL)
+                    ? filter_var($type[1], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)
+                    : $type[1];
+
+                $stmt->bindValue(":{$columnName}", $value, $type[0]);
             }
+
             $stmt->execute();
-            $results = $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, get_called_class(), array_keys(static::$tableSchema));
-            return (is_array($results) && !empty($results)) ? $results : false;
+            return $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, get_called_class());
         });
     }
 }

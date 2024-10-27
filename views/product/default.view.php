@@ -23,13 +23,19 @@
 
     <div class="container">
 
+        <?php
 
+        use dash\lib\alertHandler;
+
+        $alertHandler = alertHandler::getInstance();
+        $alertHandler->handleAlert();
+
+        ?>
 
         <div class="table-responsive">
             <table class="table table-hover table-striped table-bordered text-center" style="margin-top: 20px; ">
                 <thead class="table-dark">
                     <tr>
-                        <th scope="col">ID</th>
                         <th scope="col">Product Name</th>
                         <th scope="col">Description</th>
                         <th scope="col">Quantity</th>
@@ -40,19 +46,18 @@
                 <tbody>
                     <?php
                     if (false !== $product) {
-                        foreach ($product as $prod) {
+                        foreach ($product as $product) {
                     ?>
                             <tr>
-                                <td><?php echo $prod->pro_id ?></td>
-                                <td><?php echo $prod->pro_name ?></td>
-                                <td><?php echo $prod->description ?></td>
-                                <td><?php echo $prod->pro_price ?></td>
-                                <td><?php echo $prod->pro_quantity ?></td>
+                                <td><?php echo htmlspecialchars($product->getProName(), ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars($product->getDescription(), ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars($product->getProQuantity(), ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars($product->getProPrice(), ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td style="display: flex; justify-content:space-between; vertical-align:middle;">
-                                    <a href="product/edit/<?php echo $prod->pro_id ?>" class="link-dark">
+                                    <a href="edit/<?php echo $product->pro_id ?>" class="link-dark">
                                         <i class="fa-solid fa-pen-to-square fs-5 me-3"></i>
                                     </a>
-                                    <a href="product/delete/<?php echo $prod->pro_id ?>" class="link-dark" title="Delete" onclick="return confirm('Are you sure you want to delete this employee?');">
+                                    <a href="delete/<?php echo $product->pro_id ?>" class="link-dark" title="Delete" onclick="return confirm('Are you sure you want to delete this employee?');">
                                         <i class="fa-solid fa-trash fs-5"></i>
                                     </a>
                                 </td>

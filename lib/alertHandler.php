@@ -4,48 +4,51 @@ namespace dash\lib;
 
 class alertHandler
 {
+    private static $instance = null;
+
+    private $alertTypes = [
+        'add' => 'alert-success',
+        'remove' => 'alert-danger',
+        'edit' => 'alert-info',
+        'error' => 'alert-warning'
+    ];
+
+    private function __construct() {}
+
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+    private function sanitize($data)
+    {
+        return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+    }
+
     public function displayAlert($type, $message)
     {
-        $alertType = '';
-
-        switch ($type) {
-            case 'add':
-                $alertType = 'alert-success';
-                break;
-            case 'remove':
-                $alertType = 'alert-danger';
-                break;
-            case 'edit':
-                $alertType = 'alert-info';
-                break;
-            case 'error':
-                $alertType = 'alert-warning';
-                break;
-            default:
-                return;
+        if (!isset($this->alertTypes[$type])) {
+            return;
         }
 
+        $alertType = $this->alertTypes[$type];
+        $message = $this->sanitize($message);
+
         echo '<div class="alert ' . $alertType . ' alert-dismissible fade show" role="alert">
-                ' . htmlspecialchars($message) . '
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>';
+    ' . $message . '
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>';
     }
 
     public function handleAlert()
     {
-        if (isset($_GET['add'])) {
-            $this->displayAlert('add', $_GET['add']);
-        }
-
-        if (isset($_GET['remove'])) {
-            $this->displayAlert('remove', $_GET['remove']);
-        }
-
-        if (isset($_GET['edit'])) {
-            $this->displayAlert('edit', $_GET['edit']);
-        }
-        if (isset($_GET['error'])) {
-            $this->displayAlert('error', $_GET['error']);
+        foreach ($this->alertTypes as $type => $alertClass) {
+            if (isset($_GET[$type])) {
+                $this->displayAlert($type, $_GET[$type]);
+            }
         }
     }
 }

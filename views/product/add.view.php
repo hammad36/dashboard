@@ -23,19 +23,20 @@
 
         use dash\lib\alertHandler;
 
-        $alertHandler = new alertHandler();
+        $alertHandler = alertHandler::getInstance();
         $alertHandler->handleAlert();
+
 
 
         ?>
         <div class=" btns" style="display: flex; justify-content:flex-end; margin-bottom: -40px;">
-            <a href="./plist.php" class="btn btn-dark">back</a>
+            <a href="product/" class="btn btn-dark">back</a>
         </div>
         <div class="text-center">
             <h1 class="title">Add New Product</h1>
             <p class="desc">Fill in the details below to add a new product to the inventory.</p>
         </div>
-        <form action="addNewHandler.php" method="post">
+        <form method="post" enctype="application/x-www-form-urlencoded" autocomplete="off">
             <div class="row">
                 <div class="column">
                     <label for="pro_name">Product Name</label>

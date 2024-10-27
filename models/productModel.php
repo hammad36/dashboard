@@ -31,12 +31,11 @@ class productModel extends abstractModel
         return $this->$prop;
     }
 
-    // Setter methods with validation
+    // Setter methods with validation and improved alert messages
     public function setProName($pro_name)
     {
         if ($pro_name === null) {
-            header("Location: add.view.php?error=Product name cannot be null.");
-            exit();
+            $this->redirectWithError('Product name cannot be empty. Please provide a valid name.');
         }
         $this->pro_name = $pro_name;
     }
@@ -44,8 +43,7 @@ class productModel extends abstractModel
     public function setDescription($description)
     {
         if ($description === null) {
-            header("Location: add.view.php?error=Description cannot be null.");
-            exit();
+            $this->redirectWithError('Description is required. Please provide a valid product description.');
         }
         $this->description = $description;
     }
@@ -53,8 +51,7 @@ class productModel extends abstractModel
     public function setProPrice($pro_price)
     {
         if ($pro_price === null || $pro_price <= 0) {
-            header("Location: add.view.php?error=Price must be greater than zero.");
-            exit();
+            $this->redirectWithError('Price must be a positive number greater than zero. Please enter a valid price.');
         }
         $this->pro_price = $pro_price;
     }
@@ -62,14 +59,41 @@ class productModel extends abstractModel
     public function setProQuantity($pro_quantity)
     {
         if ($pro_quantity === null || $pro_quantity < 0) {
-            header("Location: add.view.php?error=Quantity cannot be negative.");
-            exit();
+            $this->redirectWithError('Quantity cannot be negative. Please enter a valid quantity.');
         }
         $this->pro_quantity = $pro_quantity;
     }
 
+    public function getProName()
+    {
+        return $this->pro_name;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function getProPrice()
+    {
+        return $this->pro_price;
+    }
+
+    public function getProQuantity()
+    {
+        return $this->pro_quantity;
+    }
+
+
     public function getTableName()
     {
         return self::$tableName;
+    }
+
+    // Helper function to handle errors and redirect
+    private function redirectWithError($message)
+    {
+        header("Location: add?error=" . urlencode($message));
+        exit();
     }
 }
