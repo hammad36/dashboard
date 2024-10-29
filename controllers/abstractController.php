@@ -36,10 +36,15 @@ class abstractController
         if ($this->_action == frontController::NOT_FOUND_ACTION) {
             require_once VIEWS_PATH . 'notFound' . DS . 'notFound.view.php';
         } else {
-            extract($this->_data);
             $view = VIEWS_PATH . $this->_controller . DS . $this->_action . '.view.php';
             if (file_exists($view)) {
+                extract($this->_data);
+                require_once  TEMPLATE_PATH . 'templateHeader.php';
+                require_once  TEMPLATE_PATH . 'sidebar.php';
+                require_once  TEMPLATE_PATH . 'navbar.php';
                 require_once $view;
+                require_once  TEMPLATE_PATH . 'templateFooter.php';
+                require_once  TEMPLATE_PATH . 'templateEnd.php';
             } else {
                 require_once VIEWS_PATH . 'notFound' . DS . 'noView.view.php';
             }
