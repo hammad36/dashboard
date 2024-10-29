@@ -17,7 +17,7 @@
                                     <div class="d-flex justify-content-between">
                                         <div>
                                             <h5 class="mb-0">Total Products</h5>
-                                            <p class="text-muted">150</p>
+                                            <p class="text-muted"><?php echo htmlspecialchars($productCount, ENT_QUOTES, 'UTF-8'); ?></p>
                                         </div>
                                         <div>
                                             <i class="fas fa-boxes fa-3x text-primary"></i>
@@ -30,7 +30,7 @@
                                     <div class="d-flex justify-content-between">
                                         <div>
                                             <h5 class="mb-0">Total Invoices</h5>
-                                            <p class="text-muted">75</p>
+                                            <p class="text-muted">40000000</p>
                                         </div>
                                         <div>
                                             <i class="fas fa-file-invoice fa-3x text-success"></i>
@@ -44,28 +44,24 @@
                 </div>
 
                 <!-- Optional: Additional Content Sections -->
-                <div class="row">
-                    <div class="col-md-6 mb-4">
+                <div class="row justify-content-center">
+                    <div class="col-md-10 col-lg-8 mb-4">
                         <div class="card p-4">
                             <h5>Recent Activities</h5>
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Added new product: <strong>Product A</strong></li>
-                                <li class="list-group-item">Created invoice #12345</li>
-                                <li class="list-group-item">User <strong>Mohammed Hammad</strong> registered</li>
-                                <!-- Add more activities -->
+                                <?php if (!empty($this->_data['lastProduct'])): ?>
+                                    <li class="list-group-item">
+                                        Added new product : <strong><?php echo htmlspecialchars($this->_data['lastProduct']['pro_name'], ENT_QUOTES, 'UTF-8'); ?></strong>
+                                    </li>
+                                <?php else: ?>
+                                    <li class="list-group-item">No recent products added. </li>
+                                <?php endif; ?>
                             </ul>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-4">
-                        <div class="card p-4">
-                            <h5>Notifications</h5>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">New product <strong>Product B</strong> added</li>
-                                <li class="list-group-item">Invoice #12346 has been paid</li>
-                                <li class="list-group-item">User <strong>Mohammed Hammad</strong> updated profile</li>
-                                <!-- Add more notifications -->
-                            </ul>
+
                         </div>
                     </div>
                 </div>
+
+
+
             </div>

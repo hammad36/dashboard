@@ -142,4 +142,71 @@ abstract class abstractModel
             return $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, get_called_class());
         });
     }
+    public static function getLastAddedElement()
+    {
+        return self::executeWithConnection(function ($connection) {
+            // Query to retrieve the latest added product using the maximum pro_id
+            $sql = 'SELECT * FROM ' . static::$tableName . ' WHERE pro_id = (SELECT MAX(pro_id) FROM ' . static::$tableName . ')';
+
+            try {
+                $stmt = $connection->prepare($sql);
+                $stmt->execute();
+                $result = $stmt->fetch(\PDO::FETCH_ASSOC); // Returns an associative array
+
+                if (!$result) {
+                    error_log("No product found in the database."); // Log if no product found
+                }
+
+                return $result ?: null;
+            } catch (\PDOException $e) {
+                error_log("Error fetching last added product: " . $e->getMessage());
+                return null;
+            }
+        });
+    }
+
+
+    // New Method: Get count of all rows in a table
+    public static function countAll()
+    {
+        return self::executeWithConnection(function ($connection) {
+            $sql = 'SELECT COUNT(*) AS count FROM ' . static::$tableName;
+            $stmt = $connection->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            return $result ? $result['count'] : 0;
+        });
+    }
+
+    // New Method: Get count of rows that meet specific criteria
+    public static function countWhere($condition, $params = [])
+    {
+        return self::executeWithConnection(function ($connection) use ($condition, $params) {
+            $sql = 'SELECT COUNT(*) AS count FROM ' . static::$tableName . ' WHERE ' . $condition;
+            $stmt = $connection->prepare($sql);
+
+            foreach ($params as $column => $value) {
+                $stmt->bindValue(":$column", $value);
+            }
+
+            $stmt->execute();
+            $result = $stmt->fetch();
+            return $result ? $result['count'] : 0;
+        });
+    }
+
+    // New Method: Execute custom SQL queries
+    public static function executeQuery($sql, $params = [])
+    {
+        return self::executeWithConnection(function ($connection) use ($sql, $params) {
+            $stmt = $connection->prepare($sql);
+
+            foreach ($params as $column => $value) {
+                $stmt->bindValue(":$column", $value);
+            }
+
+            $stmt->execute();
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        });
+    }
 }

@@ -30,7 +30,7 @@
 
         ?>
         <div class=" btns" style="display: flex; justify-content:flex-end; margin-bottom: -40px;">
-            <a href="product/" class="btn btn-dark">back</a>
+            <a href="/product" class="btn btn-dark">back</a>
         </div>
         <div class="text-center">
             <h1 class="title">Add New Product</h1>
