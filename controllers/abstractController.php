@@ -43,7 +43,6 @@ class abstractController
                 require_once  TEMPLATE_PATH . 'sidebar.php';
                 require_once  TEMPLATE_PATH . 'navbar.php';
                 require_once $view;
-                require_once  TEMPLATE_PATH . 'templateFooter.php';
                 require_once  TEMPLATE_PATH . 'templateEnd.php';
             } else {
                 require_once VIEWS_PATH . 'notFound' . DS . 'noView.view.php';
