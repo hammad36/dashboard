@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="../../assets/css/productStyles.css">
+
 <div class="container">
     <!-- Back Button -->
     <div class="btns text-right">

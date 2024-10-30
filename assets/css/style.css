@@ -50,7 +50,6 @@
     margin-top: 10px;
     font-size: 1.2em;
     font-weight: bold;
-    opacity: 0;
 }
 
 /* Sidebar Navigation */
@@ -94,6 +93,40 @@
     transition: margin-left 0.3s ease;
     width: 100%;
 }
+
+/* Card Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Card Styling */
+.card {
+    animation: fadeIn 0.5s ease forwards;
+    opacity: 0; /* Start with an invisible card */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for transform and shadow */
+}
+
+.container-cards .card:nth-child(1) {
+    animation-delay: 0.1s; /* Delay for the first card */
+}
+
+.container-cards .card:nth-child(2) {
+    animation-delay: 0.2s; /* Delay for the second card */
+}
+
+/* Card Hover Effect */
+.card:hover {
+    transform: scale(1.05); /* Slightly increase size on hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add a shadow effect */
+}
+
 
 /* Navbar Styling */
 .navbar {

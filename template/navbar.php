@@ -8,8 +8,9 @@
             </button>
             <form class="d-flex me-auto">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i></button>
+                <button class="btn btn-outline-dark" type="submit"><i class="fas fa-search"></i></button>
             </form>
+
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="userDropdown"
                     data-bs-toggle="dropdown" aria-expanded="false">
