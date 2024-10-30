@@ -13,13 +13,11 @@
 
 
     <title>Add New Product</title>
-    <link rel="stylesheet" href="../../assets/css/Pstyles.css">
+    <link rel="stylesheet" href="../../assets/css/Pstyle.css">
 </head>
 
 <body>
-    <nav>
-        <h1 class="mp">Manage Products</h1>
-    </nav>
+
 
     <div class="container">
 
