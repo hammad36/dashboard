@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="../../assets/css/style.css">
-
+<title>Dashboard</title>
+</head>
 <!-- Main Content -->
 <div class="container-fluid">
     <div class="row mb-4">

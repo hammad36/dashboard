@@ -1,4 +1,8 @@
-<link rel="stylesheet" href="../../assets/css/productStyles.css">
+<link rel="stylesheet" href="../../public/css/proudctStyles.css">
+<link rel="stylesheet" href="../../assets/css/style.css">
+
+<title>Dashboard</title>
+</head>
 
 <div class="container">
 
