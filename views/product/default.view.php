@@ -1,6 +1,6 @@
+<!-- CSS and Title -->
 <link rel="stylesheet" href="../../public/css/proudctStyles.css">
 <link rel="stylesheet" href="../../public/css/style.css">
-
 <title>Dashboard</title>
 </head>
 
@@ -10,16 +10,17 @@
 
     use dash\lib\alertHandler;
 
-    $alertHandler = alertHandler::getInstance();
-    $alertHandler->handleAlert();
+    alertHandler::getInstance()->handleAlert();
     ?>
-    <div class="btns" style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+
+    <!-- Add Product Button -->
+    <div class="btn-container">
         <a href="/product/add" class="btn btn-dark btn-enhanced">Add New Product</a>
     </div>
 
-
+    <!-- Product Table -->
     <div class="table-responsive">
-        <table class="table table-hover table-striped table-bordered text-center" style="margin-top: 20px; ">
+        <table class="table table-hover table-striped table-bordered text-center mt-3">
             <thead class="table-dark">
                 <tr>
                     <th scope="col">Product Name</th>
@@ -30,36 +31,58 @@
                 </tr>
             </thead>
             <tbody>
-                <?php
-                if (false !== $product) {
-                    foreach ($product as $product) {
-                ?>
+                <?php if ($product !== false) : ?>
+                    <?php foreach ($product as $prod) : ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($product->getProName(), ENT_QUOTES, 'UTF-8'); ?></td>
-                            <td><?php echo htmlspecialchars($product->getDescription(), ENT_QUOTES, 'UTF-8'); ?></td>
-                            <td><?php echo htmlspecialchars($product->getProQuantity(), ENT_QUOTES, 'UTF-8'); ?></td>
-                            <td><?php echo htmlspecialchars($product->getProPrice(), ENT_QUOTES, 'UTF-8'); ?></td>
-                            <td style="display: flex; justify-content:space-between; vertical-align:middle;">
-                                <a href="/product/edit/<?php echo $product->pro_id ?>" class="link-dark">
+                            <td><?= htmlspecialchars($prod->getProName(), ENT_QUOTES, 'UTF-8') ?></td>
+                            <td><?= htmlspecialchars($prod->getDescription(), ENT_QUOTES, 'UTF-8') ?></td>
+                            <td><?= htmlspecialchars($prod->getProQuantity(), ENT_QUOTES, 'UTF-8') ?></td>
+                            <td><?= htmlspecialchars($prod->getProPrice(), ENT_QUOTES, 'UTF-8') ?></td>
+                            <td class="action-cell" style=" display: flex; justify-content: space-around;align-items: center;">
+                                <a href="/product/edit/<?= $prod->pro_id ?>" class="link-dark">
                                     <i class="fa-solid fa-pen-to-square fs-5 me-3"></i>
                                 </a>
-                                <a href="/product/delete/<?php echo $product->pro_id ?>" class="link-dark" title="Delete" onclick="return confirm('Are you sure you want to delete this employee?');">
+                                <a href="#" class="link-dark delete-btn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-id="<?= $prod->pro_id ?>">
                                     <i class="fa-solid fa-trash fs-5"></i>
                                 </a>
                             </td>
                         </tr>
-                    <?php
-                    }
-                } else {
-                    ?>
-                    <td colspan="6">
-                        <p>sorry no products here</p>
-                    </td>
-                <?php
-                }
-                ?>
-
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <tr>
+                        <td colspan="6" class="no-products">Sorry, no products available.</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
 </div>
+
+<!-- Bootstrap Modal for Delete Confirmation -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this product?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="#" id="confirmDeleteLink" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set delete link dynamically based on product ID
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const productId = button.getAttribute('data-id');
+            document.getElementById('confirmDeleteLink').setAttribute('href', `/product/delete/${productId}`);
+        });
+    });
+</script>

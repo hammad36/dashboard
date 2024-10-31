@@ -4,6 +4,14 @@
 </head>
 
 <div class="container">
+    <?php
+
+    use dash\lib\alertHandler;
+
+    $alertHandler = alertHandler::getInstance();
+    $alertHandler->handleAlert();
+    ?>
+
     <!-- Back button -->
     <div class="btns text-right">
         <a href="/product" class="btn btn-dark">Back to Product List</a>

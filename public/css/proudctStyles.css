@@ -87,7 +87,26 @@ textarea {
     border-radius: 5px;
     box-sizing: border-box;
 }
+.btn-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
 
+.mt-3 {
+    margin-top: 20px;
+}
+
+.action-cell {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.no-products {
+    text-align: center;
+    font-weight: bold;
+}
 button {
     background-color: #333;
     color: #fff;
@@ -101,6 +120,7 @@ button {
 button:hover {
     background-color: #555;
 }
+
 
 
 /* Animations */

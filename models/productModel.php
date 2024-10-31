@@ -4,8 +4,13 @@ namespace dash\models;
 
 require_once 'abstractModel.php';
 
+use dash\lib\InputFilter;
+use dash\lib\alertHandler;
+
 class productModel extends abstractModel
 {
+    use InputFilter;
+
     protected $pro_id;
     protected $pro_name;
     protected $description;
@@ -24,76 +29,75 @@ class productModel extends abstractModel
 
     protected static $primaryKey = 'pro_id';
 
-    public function __construct() {}
+    // Create alertHandler instance
+    private $alertHandler;
+
+    public function __construct()
+    {
+        $this->alertHandler = alertHandler::getInstance();
+    }
 
     public function __get($prop)
     {
         return $this->$prop;
     }
 
-    // Setter methods with validation and improved alert messages
+    // Setter methods with input filtering and alert handling
     public function setProName($pro_name)
     {
-        if ($pro_name === null) {
-            $this->redirectWithError('Product name cannot be empty. Please provide a valid name.');
+        $filteredName = $this->filterString($pro_name, 1, 255);
+        if ($filteredName === null) {
+            $this->alertHandler->redirectWithMessage("/product", "error", "Product name cannot be empty.");
         }
-        $this->pro_name = $pro_name;
+        $this->pro_name = $filteredName;
     }
 
     public function setDescription($description)
     {
-        if ($description === null) {
-            $this->redirectWithError('Description is required. Please provide a valid product description.');
+        $filteredDescription = $this->filterString($description, 1, 150);
+        if ($filteredDescription === null) {
+            $this->alertHandler->redirectWithMessage("/product", "error", "Description must be provided and should not exceed the character limit.");
         }
-        $this->description = $description;
+        $this->description = $filteredDescription;
     }
 
     public function setProPrice($pro_price)
     {
-        if ($pro_price === null || $pro_price <= 0) {
-            $this->redirectWithError('Price must be a positive number greater than zero. Please enter a valid price.');
+        $filteredPrice = $this->filterFloat($pro_price);
+        if ($filteredPrice === null) {
+            $this->alertHandler->redirectWithMessage("/product", "error", "Price must be a valid number.");
         }
-        $this->pro_price = $pro_price;
+        $this->pro_price = $filteredPrice;
     }
 
     public function setProQuantity($pro_quantity)
     {
-        if ($pro_quantity === null || $pro_quantity < 0) {
-            $this->redirectWithError('Quantity cannot be negative. Please enter a valid quantity.');
+        $filteredQuantity = $this->filterInt($pro_quantity);
+        if ($filteredQuantity === null) {
+            $this->alertHandler->redirectWithMessage("/product", "error", "Quantity must be a valid integer.");
         }
-        $this->pro_quantity = $pro_quantity;
+        $this->pro_quantity = $filteredQuantity;
     }
 
+    // Getter methods
     public function getProName()
     {
         return $this->pro_name;
     }
-
     public function getDescription()
     {
         return $this->description;
     }
-
     public function getProPrice()
     {
         return $this->pro_price;
     }
-
     public function getProQuantity()
     {
         return $this->pro_quantity;
     }
-
-
     public function getTableName()
     {
         return self::$tableName;
-    }
-
-    // Helper function to handle errors and redirect
-    private function redirectWithError($message)
-    {
-        header("Location: add?error=" . urlencode($message));
-        exit();
     }
 }

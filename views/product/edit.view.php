@@ -16,7 +16,7 @@
     </div>
 
     <!-- Edit Product Form -->
-    <form action="editHandler.php?id=<?= htmlspecialchars($product->pro_id); ?>" method="post">
+    <form action="/product/edit/<?= htmlspecialchars($product->pro_id); ?>" method="post">
         <div class="mb-3">
             <label for="pro_name" class="form-label">Product Name</label>
             <input type="text" class="form-control" id="pro_name" name="pro_name"
