@@ -58,6 +58,15 @@
                             <li class="list-group-item">No recent products added.</li>
                         <?php endif; ?>
                     </ul>
+                    <ul class="list-group list-group-flush">
+                        <?php if (!empty($this->_data['lastProduct'])): ?>
+                            <li class="list-group-item">
+                                <?php echo 'New product added successfully: "<strong>' . htmlspecialchars($this->_data['lastProduct']['pro_name'], ENT_QUOTES, 'UTF-8') . '</strong>" , with a quantity of "<strong>' . htmlspecialchars($this->_data['lastProduct']['pro_quantity'], ENT_QUOTES, 'UTF-8') . '</strong>" and priced at "<strong>' . htmlspecialchars($this->_data['lastProduct']['pro_price'], ENT_QUOTES, 'UTF-8') . ' EGP "</strong>.'; ?>
+                            </li>
+                        <?php else: ?>
+                            <li class="list-group-item">No recent products added.</li>
+                        <?php endif; ?>
+                    </ul>
                 </div>
             </div>
         </div>
