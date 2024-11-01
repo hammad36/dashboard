@@ -14,7 +14,7 @@
     ?>
 
     <!-- Add Invoice Button -->
-    <div class="btn-container">
+    <div class="btn-container" style="display:flex; justify-content:flex-end; margin-bottom: 10px;">
         <a href="/invoice/add" class="btn btn-dark btn-enhanced">Add New Invoice</a>
     </div>
 
