@@ -17,8 +17,6 @@ class invoiceModel extends abstractModel
     protected $inv_date;
     protected $total_amount;
 
-    public static $db;
-
     protected static $tableName = 'invoice';
     protected static $tableSchema = [
         'inv_number'    => self::DATA_TYPE_INT,
@@ -30,7 +28,6 @@ class invoiceModel extends abstractModel
 
     protected static $primaryKey = 'inv_number';
 
-    // Create alertHandler instance
     private $alertHandler;
 
     public function __construct()
@@ -73,7 +70,7 @@ class invoiceModel extends abstractModel
 
     public function setInvDate($inv_date)
     {
-        $filteredDate = $this->filterString($inv_date);  // Additional date format checks can be added if necessary
+        $filteredDate = $this->filterString($inv_date);
         if ($filteredDate === null) {
             $this->alertHandler->redirectWithMessage("/invoice", "error", "Invoice date must be a valid date.");
         }
@@ -87,6 +84,28 @@ class invoiceModel extends abstractModel
             $this->alertHandler->redirectWithMessage("/invoice", "error", "Total amount must be a valid number.");
         }
         $this->total_amount = $filteredAmount;
+    }
+
+    public static function getLastAddedElement($orderByColumn = 'inv_date', $orderDirection = 'DESC')
+    {
+        return self::executeWithConnection(function ($connection) use ($orderByColumn, $orderDirection) {
+            $sql = "SELECT * FROM " . static::$tableName . " ORDER BY $orderByColumn $orderDirection LIMIT 1";
+
+            try {
+                $stmt = $connection->prepare($sql);
+                $stmt->execute();
+                $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+                if (!$result) {
+                    error_log("No invoice found in getLastAddedElement().");
+                }
+
+                return $result ?: null;
+            } catch (\PDOException $e) {
+                error_log("Error fetching last added invoice: " . $e->getMessage());
+                return null;
+            }
+        });
     }
 
     // Getter methods

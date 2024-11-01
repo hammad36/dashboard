@@ -59,10 +59,6 @@
     padding-left: 10px;
 }
 
-#sidebar ul li {
-    opacity: 1; /* No fade-in animation for the list items */
-}
-
 #sidebar ul li a {
     padding: 15px 20px;
     font-size: 1.1em;
@@ -94,39 +90,27 @@
     width: 100%;
 }
 
-/* Card Animation */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Card Styling for Total Products and Total Invoices */
+.container-cards .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Card Styling */
-.card {
-    animation: fadeIn 0.5s ease forwards;
-    opacity: 0; /* Start with an invisible card */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for transform and shadow */
+/* Hover Effect for Total Products and Total Invoices */
+.container-cards .card:hover {
+    transform: scale(1.03); /* Slightly increase size on hover */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15); /* Add a subtle shadow effect */
 }
 
-.container-cards .card:nth-child(1) {
-    animation-delay: 0.1s; /* Delay for the first card */
+/* Styling for Recent Activities Card */
+.recent-activities .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.container-cards .card:nth-child(2) {
-    animation-delay: 0.2s; /* Delay for the second card */
+/* Hover Effect for Recent Activities */
+.recent-activities .card:hover {
+    transform: scale(1.03); /* Slightly increase size on hover */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15); /* Add a subtle shadow effect */
 }
-
-/* Card Hover Effect */
-.card:hover {
-    transform: scale(1.05); /* Slightly increase size on hover */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add a shadow effect */
-}
-
 
 /* Navbar Styling */
 .navbar {
