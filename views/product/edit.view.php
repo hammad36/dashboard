@@ -1,6 +1,3 @@
-<link rel="stylesheet" href="../../public/css/proudctStyles.css">
-<link rel="stylesheet" href="../../public/css/style.css">
-
 <title>Dashboard</title>
 </head>
 <div class="container">

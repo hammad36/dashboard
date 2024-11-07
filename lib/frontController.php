@@ -10,8 +10,11 @@ class frontController
     private $_action = 'default';
     private $_params = array();
 
-    public function __construct()
+    private $_template;
+
+    public function __construct(template $template)
     {
+        $this->_template = $template;
         $this->_parseUrl();
     }
 
@@ -37,7 +40,6 @@ class frontController
 
         if (!class_exists($controllerClassName)) {
             $controllerClassName = self::NOT_FOUND_CONTROLLER;
-            // $controllerClassName = self::NOT_FOUND_CONTROLLER or 'dash\controllers\\notFoundController';
         }
 
         $controller = new $controllerClassName();
@@ -47,6 +49,7 @@ class frontController
         $controller->setController($this->_controller);
         $controller->setAction($this->_action);
         $controller->setParams($this->_params);
+        $controller->setTemplate($this->_template);
         $controller->$actionName();
     }
 }

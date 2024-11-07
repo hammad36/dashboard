@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="../../public/css/style.css">
 <title>Admin Dashboard</title>
 </head>
 <!-- Main Content -->
