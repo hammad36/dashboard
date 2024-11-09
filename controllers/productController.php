@@ -68,11 +68,11 @@ class productController extends abstractController
     private function handleProductForm($product, $successMessage, $redirectPath, $alertType)
     {
         try {
-            list($pro_name, $description, $pro_price, $pro_quantity) = $this->validateProductInputs();
+            list($pro_name, $pro_description, $pro_price, $pro_quantity) = $this->validateProductInputs();
 
             // Update product fields
             $product->setProName($pro_name);
-            $product->setDescription($description);
+            $product->setDescription($pro_description);
             $product->setProPrice($pro_price);
             $product->setProQuantity($pro_quantity);
 
@@ -89,14 +89,14 @@ class productController extends abstractController
     private function validateProductInputs()
     {
         $pro_name = $this->filterString($_POST['pro_name'], 1, 255);
-        $description = $this->filterString($_POST['description'], 1, 1000);
+        $pro_description = $this->filterString($_POST['pro_description'], 1, 1000);
         $pro_price = $this->filterFloat($_POST['pro_price']);
         $pro_quantity = $this->filterInt($_POST['pro_quantity']);
 
-        if (!$pro_name || !$description || !$pro_price || !$pro_quantity) {
+        if (!$pro_name || !$pro_description || !$pro_price || !$pro_quantity) {
             throw new \Exception('Invalid input');
         }
 
-        return [$pro_name, $description, $pro_price, $pro_quantity];
+        return [$pro_name, $pro_description, $pro_price, $pro_quantity];
     }
 }

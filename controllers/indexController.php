@@ -19,9 +19,6 @@ class indexController extends abstractController
         $this->_view();
     }
 
-    /**
-     * Fetch all products
-     */
     private function fetchAllProducts()
     {
         return $this->handleRequest(function () {
@@ -29,9 +26,6 @@ class indexController extends abstractController
         }, "Error fetching all products");
     }
 
-    /**
-     * Fetch the count of all products based on a condition
-     */
     private function fetchProductCount($condition = '1=1')
     {
         return $this->handleRequest(function () use ($condition) {
@@ -39,13 +33,10 @@ class indexController extends abstractController
         }, "Error fetching product count");
     }
 
-    /**
-     * Fetch the last added product with ordering options
-     */
-    private function fetchLastProduct($orderByColumn = 'created_at', $orderDirection = 'DESC')
+    private function fetchLastProduct()
     {
-        return $this->handleRequest(function () use ($orderByColumn, $orderDirection) {
-            $lastProduct = productModel::getLastAddedElement($orderByColumn, $orderDirection);
+        return $this->handleRequest(function () {
+            $lastProduct = productModel::getLastAddedElement();
             if (!$lastProduct) {
                 error_log("No recent product found in fetchLastProduct().");
             }
@@ -53,9 +44,6 @@ class indexController extends abstractController
         }, "Error fetching last added product");
     }
 
-    /**
-     * Fetch all invoices
-     */
     private function fetchAllInvoices()
     {
         return $this->handleRequest(function () {
@@ -63,9 +51,6 @@ class indexController extends abstractController
         }, "Error fetching all invoices");
     }
 
-    /**
-     * Fetch the count of all invoices based on a condition
-     */
     private function fetchInvoiceCount($condition = '1=1')
     {
         return $this->handleRequest(function () use ($condition) {
@@ -73,13 +58,10 @@ class indexController extends abstractController
         }, "Error fetching invoice count");
     }
 
-    /**
-     * Fetch the last added invoice with ordering options
-     */
-    private function fetchLastInvoice($orderByColumn = 'inv_date', $orderDirection = 'DESC')
+    private function fetchLastInvoice()
     {
-        return $this->handleRequest(function () use ($orderByColumn, $orderDirection) {
-            $lastInvoice = invoiceModel::getLastAddedElement($orderByColumn, $orderDirection);
+        return $this->handleRequest(function () {
+            $lastInvoice = invoiceModel::getLastAddedElement();
             if (!$lastInvoice) {
                 error_log("No recent invoice found in fetchLastInvoice().");
             }
@@ -87,13 +69,6 @@ class indexController extends abstractController
         }, "Error fetching last added invoice");
     }
 
-    /**
-     * Centralized error handling and logging
-     * 
-     * @param callable $callback  The callback to execute.
-     * @param string   $errorMsg  The error message to log.
-     * @return mixed              The result of the callback or a default fallback.
-     */
     private function handleRequest(callable $callback, $errorMsg = "An error occurred")
     {
         try {

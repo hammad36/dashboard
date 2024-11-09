@@ -50,6 +50,7 @@ class template
         } else {
             $parts = $this->_templateParts['template'];
             if (!empty($parts)) {
+                extract($this->_data);
                 foreach ($parts as $partKey => $file) {
                     if ($partKey === ':view') {
                         require_once $this->_action_view;

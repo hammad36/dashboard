@@ -1,6 +1,3 @@
-<title>Dashboard</title>
-</head>
-
 <div class="container">
 
     <?php
@@ -11,7 +8,7 @@
     ?>
 
     <!-- Add Product Button -->
-    <div class="btn-container">
+    <div class="btn-container" style="display:flex; justify-content:flex-end; margin-bottom: 10px;">
         <a href="/product/add" class="btn btn-dark btn-enhanced">Add New Product</a>
     </div>
 
@@ -31,10 +28,11 @@
                 <?php if ($product !== false) : ?>
                     <?php foreach ($product as $prod) : ?>
                         <tr>
-                            <td><?= htmlspecialchars($prod->getProName(), ENT_QUOTES, 'UTF-8') ?></td>
-                            <td><?= htmlspecialchars($prod->getDescription(), ENT_QUOTES, 'UTF-8') ?></td>
-                            <td><?= htmlspecialchars($prod->getProQuantity(), ENT_QUOTES, 'UTF-8') ?></td>
-                            <td><?= htmlspecialchars($prod->getProPrice(), ENT_QUOTES, 'UTF-8') ?></td>
+                            <td><?= htmlspecialchars($prod->pro_name, ENT_QUOTES, 'UTF-8') ?></td>
+                            <td><?= htmlspecialchars($prod->pro_description, ENT_QUOTES, 'UTF-8') ?></td>
+                            <td><?= htmlspecialchars($prod->pro_quantity, ENT_QUOTES, 'UTF-8') ?></td>
+                            <td><?= htmlspecialchars($prod->pro_price, ENT_QUOTES, 'UTF-8') ?></td>
+
                             <td class="action-cell" style=" display: flex; justify-content: space-around;align-items: center;">
                                 <a href="/product/edit/<?= $prod->pro_id ?>" class="link-dark">
                                     <i class="fa-solid fa-pen-to-square fs-5 me-3"></i>

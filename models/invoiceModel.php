@@ -2,8 +2,6 @@
 
 namespace dash\models;
 
-require_once 'abstractModel.php';
-
 use dash\lib\InputFilter;
 use dash\lib\alertHandler;
 
@@ -23,11 +21,10 @@ class invoiceModel extends abstractModel
         'client_name'   => self::DATA_TYPE_STR,
         'client_email'  => self::DATA_TYPE_STR,
         'inv_date'      => self::DATA_TYPE_DATE,
-        'total_amount'  => self::DATA_TYPE_DECIMAL,
+        'total_amount'  => self::DATA_TYPE_INT,
     ];
 
     protected static $primaryKey = 'inv_number';
-
     private $alertHandler;
 
     public function __construct()
@@ -86,27 +83,7 @@ class invoiceModel extends abstractModel
         $this->total_amount = $filteredAmount;
     }
 
-    public static function getLastAddedElement($orderByColumn = 'inv_date', $orderDirection = 'DESC')
-    {
-        return self::executeWithConnection(function ($connection) use ($orderByColumn, $orderDirection) {
-            $sql = "SELECT * FROM " . static::$tableName . " ORDER BY $orderByColumn $orderDirection LIMIT 1";
 
-            try {
-                $stmt = $connection->prepare($sql);
-                $stmt->execute();
-                $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-                if (!$result) {
-                    error_log("No invoice found in getLastAddedElement().");
-                }
-
-                return $result ?: null;
-            } catch (\PDOException $e) {
-                error_log("Error fetching last added invoice: " . $e->getMessage());
-                return null;
-            }
-        });
-    }
 
     // Getter methods
     public function getInvNumber()

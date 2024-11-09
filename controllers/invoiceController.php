@@ -6,6 +6,7 @@ use dash\controllers\abstractController;
 use dash\lib\InputFilter;
 use dash\models\invoiceModel;
 use dash\lib\alertHandler;
+use dash\models\productModel;
 
 class invoiceController extends abstractController
 {
@@ -26,11 +27,16 @@ class invoiceController extends abstractController
 
     public function addAction()
     {
+        // Fetch all products and store them in the _data array
+        $this->_data['products'] = productModel::getAll();  // Ensure 'products' key is used
+
         if (isset($_POST['submit'])) {
             $this->handleInvoiceForm(new invoiceModel(), "Invoice added successfully.", "add", "add");
         }
         $this->_view();
     }
+
+
 
     public function editAction()
     {

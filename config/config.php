@@ -8,8 +8,8 @@ if (!defined('DS')) {
 define('APP_PATH', realpath(dirname(__FILE__)) . DS . '..'  . DS);
 define('VIEWS_PATH', APP_PATH . DS . 'views' . DS);
 define('TEMPLATE_PATH', APP_PATH  . 'template' . DS);
-define('CSS', 'public/css/');
-define('JS', 'public/js/');
+define('CSS', '../../public/css/');
+define('JS', '../../public/js/');
 
 defined('DATABASE_HOST_NAME')   ? null : define('DATABASE_HOST_NAME', 'localhost');
 defined('DATABASE_USER_NAME')   ? null : define('DATABASE_USER_NAME', 'hammad');

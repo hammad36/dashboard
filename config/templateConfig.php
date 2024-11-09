@@ -14,16 +14,16 @@ return [
 
     'header_resources' => [
         'css' => [
-            'style'         => CSS . 'style.css',
             'productStyles' => CSS . 'productStyles.css',
-            'invoiceStyles' => CSS . 'invoiceStyles.css'
+            'invoiceStyles' => CSS . 'invoiceStyles.css',
+            'style'         => CSS . 'style.css'
         ]
     ],
 
     'footer_resources' => [
         'js' => [
-            'index'         => JS . 'index.js',
-            'product'       => JS . 'product.js'
+            'product'       => JS . 'product.js',
+            'index'         => JS . 'index.js'
         ]
     ]
 

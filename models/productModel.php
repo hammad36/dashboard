@@ -13,7 +13,7 @@ class productModel extends abstractModel
 
     protected $pro_id;
     protected $pro_name;
-    protected $description;
+    protected $pro_description;  // Change this to pro_description
     protected $pro_price;
     protected $pro_quantity;
 
@@ -22,8 +22,8 @@ class productModel extends abstractModel
     protected static $tableName = 'product';
     protected static $tableSchema = [
         'pro_name'         => self::DATA_TYPE_STR,
-        'description'      => self::DATA_TYPE_STR,
-        'pro_price'        => self::DATA_TYPE_DECIMAL,
+        'pro_description'      => self::DATA_TYPE_STR,
+        'pro_price'        => self::DATA_TYPE_INT,
         'pro_quantity'     => self::DATA_TYPE_INT,
     ];
 
@@ -52,18 +52,18 @@ class productModel extends abstractModel
         $this->pro_name = $filteredName;
     }
 
-    public function setDescription($description)
+    public function setDescription($pro_description)
     {
-        $filteredDescription = $this->filterString($description, 1, 150);
+        $filteredDescription = $this->filterString($pro_description, 1, 1000);
         if ($filteredDescription === null) {
             $this->alertHandler->redirectWithMessage("/product", "error", "Description must be provided and should not exceed the character limit.");
         }
-        $this->description = $filteredDescription;
+        $this->pro_description = $filteredDescription;
     }
 
     public function setProPrice($pro_price)
     {
-        $filteredPrice = $this->filterFloat($pro_price);
+        $filteredPrice = $this->filterInt($pro_price);
         if ($filteredPrice === null) {
             $this->alertHandler->redirectWithMessage("/product", "error", "Price must be a valid number.");
         }
@@ -79,25 +79,22 @@ class productModel extends abstractModel
         $this->pro_quantity = $filteredQuantity;
     }
 
-    // Getter methods
-    public function getProName()
+    // Method to retrieve available quantity
+    public static function getAvailableQuantity($pro_id)
     {
-        return $this->pro_name;
+        $sql = "SELECT pro_quantity FROM " . self::$tableName . " WHERE pro_id = :pro_id";
+        $result = self::get($sql, ['pro_id' => [self::DATA_TYPE_INT, $pro_id]]);
+        return $result ? $result[0]->pro_quantity : null;
     }
-    public function getDescription()
+
+    // Method to reduce quantity
+    public static function reduceQuantity($pro_id, $quantity)
     {
-        return $this->description;
-    }
-    public function getProPrice()
-    {
-        return $this->pro_price;
-    }
-    public function getProQuantity()
-    {
-        return $this->pro_quantity;
-    }
-    public function getTableName()
-    {
-        return self::$tableName;
+        $availableQuantity = self::getAvailableQuantity($pro_id);
+        if ($availableQuantity !== null && $availableQuantity >= $quantity) {
+            $sql = "UPDATE " . self::$tableName . " SET pro_quantity = pro_quantity - :quantity WHERE pro_id = :pro_id";
+            return self::executeQuery($sql, ['pro_id' => [self::DATA_TYPE_INT, $pro_id], 'quantity' => [self::DATA_TYPE_INT, $quantity]]);
+        }
+        return false;
     }
 }

@@ -1,6 +1,3 @@
-<title>Admin Dashboard</title>
-</head>
-<!-- Main Content -->
 <div class="container-fluid">
     <div class="row mb-4">
         <!-- Welcome Section -->
@@ -74,6 +71,7 @@
                             <li class="list-group-item">No recent invoices created.</li>
                             <?php error_log("No recent invoice available in default.view.php."); ?>
                         <?php endif; ?>
+
 
                     </ul>
                 </div>

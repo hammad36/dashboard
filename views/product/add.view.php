@@ -1,6 +1,3 @@
-<title>Dashboard</title>
-</head>
-
 <div class="container">
     <?php
 
@@ -32,8 +29,8 @@
 
         <div class="row">
             <div class="column">
-                <label for="description">Description</label>
-                <input type="text" id="description" name="description" placeholder="Enter product description" required>
+                <label for="pro_description">Description</label>
+                <input type="text" id="pro_description" name="pro_description" placeholder="Enter product description" required>
             </div>
         </div>
 

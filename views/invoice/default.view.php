@@ -1,9 +1,3 @@
-<!-- CSS and Title -->
-<link rel="stylesheet" href="../../public/css/invoiceStyles.css">
-<link rel="stylesheet" href="../../public/css/style.css">
-<title>Invoice Dashboard</title>
-</head>
-
 <div class="container">
 
     <?php

@@ -107,6 +107,7 @@ abstract class abstractModel
         });
     }
 
+
     public static function getByPK($pk)
     {
         return self::executeWithConnection(function ($connection) use ($pk) {
@@ -142,11 +143,12 @@ abstract class abstractModel
             return $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, get_called_class());
         });
     }
+
     public static function getLastAddedElement()
     {
         return self::executeWithConnection(function ($connection) {
-            // Query to retrieve the latest added product using the maximum pro_id
-            $sql = 'SELECT * FROM ' . static::$tableName . ' WHERE pro_id = (SELECT MAX(pro_id) FROM ' . static::$tableName . ')';
+            $primaryKey = static::$primaryKey;  // Get the primary key dynamically
+            $sql = 'SELECT * FROM ' . static::$tableName . ' WHERE ' . $primaryKey . ' = (SELECT MAX(' . $primaryKey . ') FROM ' . static::$tableName . ')';
 
             try {
                 $stmt = $connection->prepare($sql);
@@ -154,16 +156,17 @@ abstract class abstractModel
                 $result = $stmt->fetch(\PDO::FETCH_ASSOC); // Returns an associative array
 
                 if (!$result) {
-                    error_log("No product found in the database."); // Log if no product found
+                    error_log("No record found in the table: " . static::$tableName);
                 }
 
                 return $result ?: null;
             } catch (\PDOException $e) {
-                error_log("Error fetching last added product: " . $e->getMessage());
+                error_log("Error fetching last added element: " . $e->getMessage());
                 return null;
             }
         });
     }
+
 
 
     // New Method: Get count of all rows in a table

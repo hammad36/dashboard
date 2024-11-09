@@ -1,5 +1,3 @@
-<title>Dashboard</title>
-</head>
 <div class="container">
     <!-- Back Button -->
     <div class="btns text-right">
@@ -21,9 +19,9 @@
         </div>
 
         <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <input type="text" class="form-control" id="description" name="description"
-                value="<?= htmlspecialchars($product->description); ?>" required>
+            <label for="pro_description" class="form-label">Description</label>
+            <input type="text" class="form-control" id="pro_description" name="pro_description"
+                value="<?= htmlspecialchars($product->pro_description); ?>" required>
         </div>
 
         <div class="mb-3">
