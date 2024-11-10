@@ -2,6 +2,8 @@
 
 namespace dash\lib;
 
+use DateTime;
+
 trait InputFilter
 {
     // Common filtering method that applies filters and checks for specific constraints.
@@ -47,6 +49,18 @@ trait InputFilter
             FILTER_SANITIZE_URL,
             fn($filtered) => filter_var($filtered, FILTER_VALIDATE_URL)
         );
+    }
+
+    public function filterDate(string $input): ?string
+    {
+        // Normalize the input to a standard format (e.g., YYYY-MM-DD)
+        $filtered = trim($input);
+
+        // Check if the input matches the format YYYY-MM-DD
+        $date = DateTime::createFromFormat('Y-m-d', $filtered);
+
+        // Validate the date by checking if it matches the expected format
+        return $date && $date->format('Y-m-d') === $filtered ? $filtered : null;
     }
 
     public function filterBoolean($input): bool

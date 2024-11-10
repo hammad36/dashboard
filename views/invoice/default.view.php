@@ -4,7 +4,10 @@
 
     use dash\lib\alertHandler;
 
-    alertHandler::getInstance()->handleAlert();
+    $alertHandler = alertHandler::getInstance();
+    $alertHandler->handleAlert();
+
+
     ?>
 
     <!-- Add Invoice Button -->

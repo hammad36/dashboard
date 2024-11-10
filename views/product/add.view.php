@@ -49,8 +49,8 @@
         </div>
 
         <!-- Submit Button -->
-        <div class="text-center">
-            <button type="submit" name="submit">Add Product</button>
+        <div class="text-center mt-4">
+            <button type="submit" name="submit" class="btn btn-primary btn-dark btn-lg animate__animated animate__pulse">Add Product</button>
         </div>
     </form>
 </div>

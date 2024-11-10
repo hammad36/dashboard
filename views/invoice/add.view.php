@@ -1,107 +1,138 @@
 <div class="container">
-    <?php
 
-    use dash\lib\alertHandler;
-    use dash\models\productModel;
-
-    $alertHandler = alertHandler::getInstance();
-    $alertHandler->handleAlert();
-    ?>
 
     <!-- Back button -->
-    <div class="btns text-right">
+    <div class="btns text-right mb-3">
         <a href="/invoice" class="btn btn-dark">Back to Invoice List</a>
     </div>
 
-    <h1 class="title text-center">Create New Invoice</h1>
-    <p class="description text-center">Fill in the details below to create a new invoice.</p>
+    <h1 class="title text-center mb-4 animate__animated animate__fadeIn">Create New Invoice</h1>
+    <p class="description text-center mb-5 animate__animated animate__fadeIn">Fill in the details below to create a new invoice.</p>
+
     <form id="invoiceForm" class="formInt" method="POST" action="">
-        <div class="row">
-            <div class="column">
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
                 <label for="invoiceDate">Invoice Date</label>
-                <input type="date" id="invoiceDate" name="inv_date" value="<?php echo date('Y-d-m'); ?>" readonly>
+                <input type="date" id="invoiceDate" name="inv_date" value="<?php echo date('Y-m-d'); ?>" readonly class="form-control">
             </div>
         </div>
-        <div class="row">
-            <div class="column">
+        <div class="row mb-4">
+            <div class="col-md-6">
                 <label for="clientName">Client Name</label>
-                <input type="text" id="clientName" name="client_name" required>
+                <input type="text" id="clientName" name="client_name" required class="form-control">
             </div>
-            <div class="column">
+            <div class="col-md-6">
                 <label for="clientEmail">Client Email</label>
-                <input type="email" id="clientEmail" name="client_email" required>
+                <input type="email" id="clientEmail" name="client_email" required class="form-control">
             </div>
         </div>
+
+        <!-- Product Selection Section -->
         <div id="productsContainer">
+            <h3 class="text-center mb-4 animate__animated animate__fadeIn">Select Products</h3>
             <div class="row">
-                <div class="column">
-                    <label for="productSelect">Select Products</label>
-                    <select id="productSelect" name="productSelect[]" multiple required>
-                        <?php
-                        // Access product data from _data array
-                        $this->_data['productResult'] = productModel::getAll();
-                        if ($productResult->num_rows > 0) {
-                            while ($row = $productResult->fetch_assoc()) {
-                                $availableQuantity = $row["pro_quantity"] - $row["total_sold"];
-                                echo '<option value="' . htmlspecialchars($row["pro_id"], ENT_QUOTES, 'UTF-8') . '" 
-                                data-price="' . htmlspecialchars($row["pro_price"], ENT_QUOTES, 'UTF-8') . '" 
-                                data-quantity="' . htmlspecialchars($availableQuantity, ENT_QUOTES, 'UTF-8') . '">'
-                                    . htmlspecialchars($row["pro_name"], ENT_QUOTES, 'UTF-8') .
-                                    '</option>';
-                            }
-                        } else {
-                            echo '<option value="" disabled>No products available</option>';
-                        }
-                        ?>
-                    </select>
+                <?php
 
+                $products = $this->_data['products']; // Use the products passed from the controller
+
+                if (isset($this->_data['products']) && count($this->_data['products']) > 0) {
+                    foreach ($this->_data['products'] as $product) {
+                        $productId = $product->getProId();
+                        $productName = $product->getProName();
+                        $productPrice = $product->getProPrice();
+                        $availableQuantity = $product->getProQuantity();
+                        echo '
+                <div class="col-md-4 mb-4 product-card-container">
+                    <div class="card product-card" data-id="' . $productId . '">
+                        <div class="card-body">
+                            <h5 class="card-title">' . $productName . '</h5>
+                            <p class="card-text">Price: ' . number_format($productPrice) . ' EGP</p>
+                            <p class="card-text">Available: ' . $availableQuantity . '</p>
+                            <input type="checkbox" id="product_' . $productId . '" data-id="' . $productId . '" data-price="' . $productPrice . '" data-quantity="' . $availableQuantity . '" class="form-check-input product-checkbox">
+                            <label for="product_' . $productId . '" class="form-check-label">Select Product</label>
+                            <input type="number" id="quantity_' . $productId . '" class="form-control product-quantity" name="products[' . $productId . ']" value="1" min="1" max="' . $availableQuantity . '" disabled>
+                            <span id="total_' . $productId . '" class="product-total">Total: 0 EGP</span>
+                        </div>
+                    </div>
                 </div>
+            ';
+                    }
+                } else {
+                    echo '<p>No products available</p>';
+                }
+                ?>
             </div>
-            <div id="productDetails"></div>
         </div>
 
-        <div class="row">
-            <div class="column">
+
+        <!-- Total Price Section -->
+        <div class="row mt-4">
+            <div class="col-md-6">
                 <label for="totalPrice">Total Price</label>
-                <input type="text" id="totalPrice" name="total_price" readonly>
+                <input type="text" id="totalPrice" name="totalPrice" readonly class="form-control">
             </div>
         </div>
-        <div class="text-center">
-            <button type="submit" name="submit">Create Invoice</button>
+
+        <div class="text-center mt-4">
+            <button type="submit" name="submit" class="btn btn-primary btn-dark btn-lg animate__animated animate__pulse">Create Invoice</button>
         </div>
     </form>
 </div>
 
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const productSelect = document.getElementById('productSelect');
-        const productDetails = document.getElementById('productDetails');
+        const productCheckboxes = document.querySelectorAll('.product-checkbox');
+        const totalPriceInput = document.getElementById('totalPrice');
+        const selectedProductsTable = document.querySelector('#selectedProductsTable tbody');
+        let overallTotal = 0; // Initialize overall total
 
-        console.log("Product Select Loaded:", productSelect.options); // Debugging line
+        // Loop through each checkbox to add event listeners
+        productCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const productId = this.dataset.id;
+                const productPrice = parseInt(this.dataset.price); // Use integer for price
+                const availableQuantity = parseInt(this.dataset.quantity);
+                const quantityInput = document.getElementById('quantity_' + productId);
+                const totalElement = document.getElementById('total_' + productId);
 
-        productSelect.addEventListener('change', function() {
-            productDetails.innerHTML = ''; // Clear previous details
-            Array.from(productSelect.selectedOptions).forEach(option => {
-                console.log("Selected Option:", option); // Debugging line
-                const productId = option.value;
-                const productName = option.textContent;
-                const productPrice = option.getAttribute('data-price');
-                const productQuantity = option.getAttribute('data-quantity');
+                // Enable the quantity input when product is selected
+                if (this.checked) {
+                    quantityInput.disabled = false; // Enable the input
+                    quantityInput.value = 1; // Set default value to 1
+                    totalElement.textContent = 'Total: ' + productPrice + ' EGP'; // Set initial total
+                    overallTotal += productPrice; // Add product price to overall total
+                } else {
+                    // Disable the quantity input and reset it to 1 when unchecked
+                    quantityInput.disabled = true;
+                    overallTotal -= parseInt(totalElement.textContent.split(' ')[1]); // Subtract current total
+                    totalElement.textContent = 'Total: 0 EGP'; // Reset total to 0
+                    quantityInput.value = 1; // Reset value to 1
+                }
 
-                const productDiv = document.createElement('div');
-                productDiv.classList.add('product-item');
+                // Update the overall total price displayed
+                totalPriceInput.value = overallTotal + ' EGP';
+            });
 
-                productDiv.innerHTML = `
-                <h4>${productName}</h4>
-                <p>Price: ${productPrice}</p>
-                <p>Available Quantity: ${productQuantity}</p>
-                <label for="quantity_${productId}">Quantity:</label>
-                <input type="number" id="quantity_${productId}" name="product_quantities[${productId}]" min="1" max="${productQuantity}" placeholder="Quantity">
-            `;
+            // Add event listener to update total when the quantity changes
+            const quantityInput = document.getElementById('quantity_' + checkbox.dataset.id);
+            quantityInput.addEventListener('input', function() {
+                if (checkbox.checked) {
+                    const quantity = parseInt(this.value) || 0;
+                    const total = quantity * parseInt(checkbox.dataset.price);
+                    document.getElementById('total_' + checkbox.dataset.id).textContent = 'Total: ' + total + ' EGP';
 
-                productDetails.appendChild(productDiv);
+                    // Recalculate the overall total price
+                    overallTotal = Array.from(productCheckboxes).reduce((acc, cb) => {
+                        const id = cb.dataset.id;
+                        if (cb.checked) {
+                            const qty = parseInt(document.getElementById('quantity_' + id).value) || 0;
+                            acc += qty * parseInt(cb.dataset.price);
+                        }
+                        return acc;
+                    }, 0);
+
+                    totalPriceInput.value = overallTotal + ' EGP';
+                }
             });
         });
     });

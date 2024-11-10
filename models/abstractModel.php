@@ -144,28 +144,28 @@ abstract class abstractModel
         });
     }
 
-    public static function getLastAddedElement()
+    public static function getLastAddedElement($orderByColumn = 'inv_number', $orderDirection = 'DESC')
     {
-        return self::executeWithConnection(function ($connection) {
-            $primaryKey = static::$primaryKey;  // Get the primary key dynamically
-            $sql = 'SELECT * FROM ' . static::$tableName . ' WHERE ' . $primaryKey . ' = (SELECT MAX(' . $primaryKey . ') FROM ' . static::$tableName . ')';
+        return self::executeWithConnection(function ($connection) use ($orderByColumn, $orderDirection) {
+            $sql = "SELECT * FROM " . static::$tableName . " ORDER BY $orderByColumn $orderDirection LIMIT 1";
 
             try {
                 $stmt = $connection->prepare($sql);
                 $stmt->execute();
-                $result = $stmt->fetch(\PDO::FETCH_ASSOC); // Returns an associative array
+                $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
                 if (!$result) {
-                    error_log("No record found in the table: " . static::$tableName);
+                    error_log("No invoice found in getLastAddedElement().");
                 }
 
                 return $result ?: null;
             } catch (\PDOException $e) {
-                error_log("Error fetching last added element: " . $e->getMessage());
+                error_log("Error fetching last added invoice: " . $e->getMessage());
                 return null;
             }
         });
     }
+
 
 
 

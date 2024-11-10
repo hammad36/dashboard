@@ -13,7 +13,7 @@ class productModel extends abstractModel
 
     protected $pro_id;
     protected $pro_name;
-    protected $pro_description;  // Change this to pro_description
+    protected $pro_description;
     protected $pro_price;
     protected $pro_quantity;
 
@@ -22,14 +22,13 @@ class productModel extends abstractModel
     protected static $tableName = 'product';
     protected static $tableSchema = [
         'pro_name'         => self::DATA_TYPE_STR,
-        'pro_description'      => self::DATA_TYPE_STR,
+        'pro_description'  => self::DATA_TYPE_STR,
         'pro_price'        => self::DATA_TYPE_INT,
         'pro_quantity'     => self::DATA_TYPE_INT,
     ];
 
     protected static $primaryKey = 'pro_id';
 
-    // Create alertHandler instance
     private $alertHandler;
 
     public function __construct()
@@ -42,7 +41,7 @@ class productModel extends abstractModel
         return $this->$prop;
     }
 
-    // Setter methods with input filtering and alert handling
+    // Setter methods with input filtering and alert handling (unchanged)
     public function setProName($pro_name)
     {
         $filteredName = $this->filterString($pro_name, 1, 255);
@@ -79,7 +78,28 @@ class productModel extends abstractModel
         $this->pro_quantity = $filteredQuantity;
     }
 
-    // Method to retrieve available quantity
+    // Getter methods for product attributes
+    public function getProId()
+    {
+        return $this->pro_id;
+    }
+
+    public function getProName()
+    {
+        return $this->pro_name;
+    }
+
+    public function getProPrice()
+    {
+        return $this->pro_price;
+    }
+
+    public function getProQuantity()
+    {
+        return $this->pro_quantity;
+    }
+
+    // Method to retrieve available quantity (unchanged)
     public static function getAvailableQuantity($pro_id)
     {
         $sql = "SELECT pro_quantity FROM " . self::$tableName . " WHERE pro_id = :pro_id";
@@ -87,7 +107,7 @@ class productModel extends abstractModel
         return $result ? $result[0]->pro_quantity : null;
     }
 
-    // Method to reduce quantity
+    // Method to reduce quantity (unchanged)
     public static function reduceQuantity($pro_id, $quantity)
     {
         $availableQuantity = self::getAvailableQuantity($pro_id);

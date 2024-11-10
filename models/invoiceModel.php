@@ -17,7 +17,6 @@ class invoiceModel extends abstractModel
 
     protected static $tableName = 'invoice';
     protected static $tableSchema = [
-        'inv_number'    => self::DATA_TYPE_INT,
         'client_name'   => self::DATA_TYPE_STR,
         'client_email'  => self::DATA_TYPE_STR,
         'inv_date'      => self::DATA_TYPE_DATE,
