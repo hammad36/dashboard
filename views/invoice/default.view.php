@@ -7,7 +7,6 @@
     $alertHandler = alertHandler::getInstance();
     $alertHandler->handleAlert();
 
-
     ?>
 
     <!-- Add Invoice Button -->
@@ -32,16 +31,16 @@
                 <?php if ($invoices !== false) : ?>
                     <?php foreach ($invoices as $inv) : ?>
                         <tr>
-                            <td><?= htmlspecialchars($inv->inv_number, ENT_QUOTES, 'UTF-8') ?></td>
-                            <td><?= htmlspecialchars($inv->client_name, ENT_QUOTES, 'UTF-8') ?></td>
-                            <td><?= htmlspecialchars($inv->client_email, ENT_QUOTES, 'UTF-8') ?></td>
-                            <td><?= htmlspecialchars($inv->inv_date, ENT_QUOTES, 'UTF-8') ?></td>
-                            <td><?= htmlspecialchars($inv->total_amount, ENT_QUOTES, 'UTF-8') ?></td>
+                            <td><?= htmlspecialchars($inv->getInvNumber(), ENT_QUOTES, 'UTF-8') ?></td> <!-- Use getter for inv_number -->
+                            <td><?= htmlspecialchars($inv->getClientName(), ENT_QUOTES, 'UTF-8') ?></td> <!-- Use getter for client_name -->
+                            <td><?= htmlspecialchars($inv->getClientEmail(), ENT_QUOTES, 'UTF-8') ?></td> <!-- Use getter for client_email -->
+                            <td><?= htmlspecialchars($inv->getInvDate(), ENT_QUOTES, 'UTF-8') ?></td> <!-- Use getter for inv_date -->
+                            <td><?= htmlspecialchars($inv->getTotalAmount(), ENT_QUOTES, 'UTF-8') ?></td> <!-- Use getter for total_amount -->
                             <td class="action-cell" style="display: flex; justify-content: space-around; align-items: center;">
-                                <a href="/invoice/edit/<?= $inv->inv_number ?>" class="link-dark">
+                                <a href="/invoice/edit/<?= $inv->getInvNumber() ?>" class="link-dark">
                                     <i class="fa-solid fa-pen-to-square fs-5 me-3"></i>
                                 </a>
-                                <a href="#" class="link-dark delete-btn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-id="<?= $inv->inv_number ?>">
+                                <a href="#" class="link-dark delete-btn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-id="<?= $inv->getInvNumber() ?>">
                                     <i class="fa-solid fa-trash fs-5"></i>
                                 </a>
                             </td>

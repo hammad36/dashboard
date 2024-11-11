@@ -1,5 +1,11 @@
 <div class="container">
+    <?php
 
+    use dash\lib\alertHandler;
+
+    $alertHandler = alertHandler::getInstance();
+    $alertHandler->handleAlert();
+    ?>
 
     <!-- Back button -->
     <div class="btns text-right mb-3">
@@ -9,7 +15,7 @@
     <h1 class="title text-center mb-4 animate__animated animate__fadeIn">Create New Invoice</h1>
     <p class="description text-center mb-5 animate__animated animate__fadeIn">Fill in the details below to create a new invoice.</p>
 
-    <form id="invoiceForm" class="formInt" method="POST" action="">
+    <form id="invoiceForm" class="formInt" method="POST" action="/invoice/add">
         <div class="row mb-4">
             <div class="col-md-6 mb-3">
                 <label for="invoiceDate">Invoice Date</label>
@@ -32,30 +38,29 @@
             <h3 class="text-center mb-4 animate__animated animate__fadeIn">Select Products</h3>
             <div class="row">
                 <?php
-
-                $products = $this->_data['products']; // Use the products passed from the controller
-
-                if (isset($this->_data['products']) && count($this->_data['products']) > 0) {
-                    foreach ($this->_data['products'] as $product) {
+                // Fetch products passed from the controller
+                $products = $this->_data['products'];
+                if (isset($products) && count($products) > 0) {
+                    foreach ($products as $product) {
                         $productId = $product->getProId();
                         $productName = $product->getProName();
                         $productPrice = $product->getProPrice();
                         $availableQuantity = $product->getProQuantity();
                         echo '
-                <div class="col-md-4 mb-4 product-card-container">
-                    <div class="card product-card" data-id="' . $productId . '">
-                        <div class="card-body">
-                            <h5 class="card-title">' . $productName . '</h5>
-                            <p class="card-text">Price: ' . number_format($productPrice) . ' EGP</p>
-                            <p class="card-text">Available: ' . $availableQuantity . '</p>
-                            <input type="checkbox" id="product_' . $productId . '" data-id="' . $productId . '" data-price="' . $productPrice . '" data-quantity="' . $availableQuantity . '" class="form-check-input product-checkbox">
-                            <label for="product_' . $productId . '" class="form-check-label">Select Product</label>
-                            <input type="number" id="quantity_' . $productId . '" class="form-control product-quantity" name="products[' . $productId . ']" value="1" min="1" max="' . $availableQuantity . '" disabled>
-                            <span id="total_' . $productId . '" class="product-total">Total: 0 EGP</span>
+                        <div class="col-md-4 mb-4 product-card-container">
+                            <div class="card product-card" data-id="' . $productId . '">
+                                <div class="card-body">
+                                    <h5 class="card-title">' . $productName . '</h5>
+                                    <p class="card-text">Price: ' . number_format($productPrice) . ' EGP</p>
+                                    <p class="card-text">Available: ' . $availableQuantity . '</p>
+                                    <input type="checkbox" id="product_' . $productId . '" data-id="' . $productId . '" data-price="' . $productPrice . '" data-quantity="' . $availableQuantity . '" class="form-check-input product-checkbox">
+                                    <label for="product_' . $productId . '" class="form-check-label">Select Product</label>
+                                    <input type="number" id="quantity_' . $productId . '" class="form-control product-quantity" name="products[' . $productId . ']" value="1" min="1" max="' . $availableQuantity . '" disabled>
+                                    <span id="total_' . $productId . '" class="product-total">Total: 0 EGP</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            ';
+                    ';
                     }
                 } else {
                     echo '<p>No products available</p>';
@@ -64,9 +69,8 @@
             </div>
         </div>
 
-
         <!-- Total Price Section -->
-        <div class="row mt-4">
+        <div class="row mt-4 justify-content-center text-center">
             <div class="col-md-6">
                 <label for="totalPrice">Total Price</label>
                 <input type="text" id="totalPrice" name="totalPrice" readonly class="form-control">
@@ -83,37 +87,35 @@
     document.addEventListener('DOMContentLoaded', function() {
         const productCheckboxes = document.querySelectorAll('.product-checkbox');
         const totalPriceInput = document.getElementById('totalPrice');
-        const selectedProductsTable = document.querySelector('#selectedProductsTable tbody');
-        let overallTotal = 0; // Initialize overall total
+        let overallTotal = 0;
 
         // Loop through each checkbox to add event listeners
         productCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', function() {
                 const productId = this.dataset.id;
-                const productPrice = parseInt(this.dataset.price); // Use integer for price
+                const productPrice = parseInt(this.dataset.price);
                 const availableQuantity = parseInt(this.dataset.quantity);
                 const quantityInput = document.getElementById('quantity_' + productId);
                 const totalElement = document.getElementById('total_' + productId);
 
-                // Enable the quantity input when product is selected
+                // Enable quantity input when product is selected
                 if (this.checked) {
-                    quantityInput.disabled = false; // Enable the input
-                    quantityInput.value = 1; // Set default value to 1
-                    totalElement.textContent = 'Total: ' + productPrice + ' EGP'; // Set initial total
-                    overallTotal += productPrice; // Add product price to overall total
+                    quantityInput.disabled = false;
+                    quantityInput.value = 1;
+                    totalElement.textContent = 'Total: ' + productPrice + ' EGP';
+                    overallTotal += productPrice;
                 } else {
-                    // Disable the quantity input and reset it to 1 when unchecked
                     quantityInput.disabled = true;
-                    overallTotal -= parseInt(totalElement.textContent.split(' ')[1]); // Subtract current total
-                    totalElement.textContent = 'Total: 0 EGP'; // Reset total to 0
-                    quantityInput.value = 1; // Reset value to 1
+                    overallTotal -= parseInt(totalElement.textContent.split(' ')[1]);
+                    totalElement.textContent = 'Total: 0 EGP';
+                    quantityInput.value = 1;
                 }
 
                 // Update the overall total price displayed
                 totalPriceInput.value = overallTotal + ' EGP';
             });
 
-            // Add event listener to update total when the quantity changes
+            // Update total when the quantity changes
             const quantityInput = document.getElementById('quantity_' + checkbox.dataset.id);
             quantityInput.addEventListener('input', function() {
                 if (checkbox.checked) {

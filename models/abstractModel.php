@@ -15,7 +15,7 @@ abstract class abstractModel
 
     protected static $connection;
 
-    protected static function getConnection()
+    public static function getConnection()
     {
         if (self::$connection === null) {
             self::$connection = databaseHandler::factory();
@@ -39,7 +39,14 @@ abstract class abstractModel
     protected function bindValues(\PDOStatement &$stmt)
     {
         foreach (static::$tableSchema as $columnName => $type) {
-            $value = $this->$columnName;
+            // Check if a getter method exists for the column and use it
+            $getterMethod = 'get' . ucfirst($columnName); // Generate the getter method name
+
+            if (method_exists($this, $getterMethod)) {
+                $value = $this->$getterMethod();
+            } else {
+                $value = $this->$columnName; // Direct access if no getter method
+            }
 
             if ($type === self::DATA_TYPE_DECIMAL) {
                 $value = filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
@@ -48,6 +55,7 @@ abstract class abstractModel
             $stmt->bindValue(":{$columnName}", $value, $type);
         }
     }
+
 
     protected static function buildNamedParameters()
     {
@@ -88,6 +96,7 @@ abstract class abstractModel
     {
         return $this->{static::$primaryKey} === null ? $this->create() : $this->update();
     }
+
 
     public function delete()
     {
