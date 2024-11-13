@@ -29,11 +29,87 @@ class invoiceController extends abstractController
     public function addAction()
     {
         $this->_data['products'] = productModel::getAll();
+
+        // Fetch available quantities for each product
+        $availableQuantities = [];
+        foreach ($this->_data['products'] as $product) {
+            $availableQuantities[$product->pro_id] = (new invoiceModel())->getAvailableQuantity($product->pro_id);
+        }
+        $this->_data['availableQuantities'] = $availableQuantities;
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->handleInvoiceForm();
         }
         $this->_view();
     }
+
+
+
+    public function editAction()
+    {
+        $id = $this->filterInt($this->_params[0]);
+        $invoice = invoiceModel::getByPK($id);
+
+        if (!$invoice) {
+            $this->alertHandler->redirectWithMessage("/invoice", "error", "Invoice not found.");
+            return;
+        }
+
+        $this->_data['invoice'] = $invoice; // Send invoice to the view
+        $this->_data['products'] = productModel::getAll(); // Send all products to the view
+
+        // Fetch the selected products for the invoice
+        $invoiceProducts = $invoice->getProducts();
+        $selectedProducts = [];
+        foreach ($invoiceProducts as $product) {
+            $selectedProducts[$product->pro_id] = $product->quantity;
+        }
+        $this->_data['selectedProducts'] = $selectedProducts;
+
+        // Fetch available quantities for each product
+        $availableQuantities = [];
+        foreach ($this->_data['products'] as $product) {
+            $availableQuantities[$product->pro_id] = (new invoiceModel())->getAvailableQuantity($product->pro_id);
+        }
+        $this->_data['availableQuantities'] = $availableQuantities;;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->handleEditInvoiceForm($invoice); // Handle form submission for updating invoice
+        }
+
+        $this->_view();
+    }
+
+    private function handleEditInvoiceForm($invoice)
+    {
+        try {
+            // Validate and gather data
+            list($client_name, $client_email, $inv_date, $productData) = $this->validateInvoiceInputs();
+
+            // Set the new values to the invoice model
+            $invoice->setClientName($client_name);
+            $invoice->setClientEmail($client_email);
+            $invoice->setInvDate($inv_date);
+            $invoice->setTotalAmount(array_sum(array_column($productData, 'line_total')));
+
+            // Save the updated invoice
+            if (!$invoice->save()) {
+                throw new \Exception('Failed to update the invoice.');
+            }
+
+            // Delete old products and save new products
+            $invoice->deleteProducts();
+            $invoice->saveProducts($productData);
+
+            // Redirect with success message
+            $this->alertHandler->redirectWithMessage("/invoice", "edit", "Invoice #{$invoice->getInvNumber()} updated successfully.");
+        } catch (\Exception $e) {
+            // Handle errors and provide specific message
+            $this->alertHandler->redirectWithMessage("/invoice/edit/{$invoice->getInvNumber()}", "error", $e->getMessage());
+        }
+    }
+
+
 
     public function deleteAction()
     {
@@ -45,6 +121,8 @@ class invoiceController extends abstractController
             $this->alertHandler->redirectWithMessage("/invoice", "error", "invoice deletion failed.");
         }
     }
+
+
 
     private function handleInvoiceForm()
     {

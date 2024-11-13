@@ -153,7 +153,7 @@ abstract class abstractModel
         });
     }
 
-    public static function getLastAddedElement($orderByColumn = 'inv_number', $orderDirection = 'DESC')
+    public static function getLastAddedElement($orderByColumn, $orderDirection)
     {
         return self::executeWithConnection(function ($connection) use ($orderByColumn, $orderDirection) {
             $sql = "SELECT * FROM " . static::$tableName . " ORDER BY $orderByColumn $orderDirection LIMIT 1";

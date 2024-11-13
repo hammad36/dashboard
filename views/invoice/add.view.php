@@ -38,14 +38,21 @@
             <h3 class="text-center mb-4 animate__animated animate__fadeIn">Select Products</h3>
             <div class="row">
                 <?php
-                // Fetch products passed from the controller
+                // Fetch products and available quantities passed from the controller
                 $products = $this->_data['products'];
+                $availableQuantities = $this->_data['availableQuantities'];
+
                 if (isset($products) && count($products) > 0) {
                     foreach ($products as $product) {
                         $productId = $product->getProId();
                         $productName = $product->getProName();
                         $productPrice = $product->getProPrice();
-                        $availableQuantity = $product->getProQuantity();
+                        $availableQuantity = $availableQuantities[$productId] ?? 0;
+
+                        // If the product is out of stock, disable selection and set quantity to 0
+                        $disabled = $availableQuantity == 0 ? 'disabled' : '';
+                        $quantityValue = $availableQuantity == 0 ? 0 : 1;
+
                         echo '
                         <div class="col-md-4 mb-4 product-card-container">
                             <div class="card product-card" data-id="' . $productId . '">
@@ -53,9 +60,9 @@
                                     <h5 class="card-title">' . $productName . '</h5>
                                     <p class="card-text">Price: ' . number_format($productPrice) . ' EGP</p>
                                     <p class="card-text">Available: ' . $availableQuantity . '</p>
-                                    <input type="checkbox" id="product_' . $productId . '" data-id="' . $productId . '" data-price="' . $productPrice . '" data-quantity="' . $availableQuantity . '" class="form-check-input product-checkbox">
+                                    <input type="checkbox" id="product_' . $productId . '" data-id="' . $productId . '" data-price="' . $productPrice . '" data-quantity="' . $availableQuantity . '" class="form-check-input product-checkbox" ' . $disabled . '>
                                     <label for="product_' . $productId . '" class="form-check-label">Select Product</label>
-                                    <input type="number" id="quantity_' . $productId . '" class="form-control product-quantity" name="products[' . $productId . ']" value="1" min="1" max="' . $availableQuantity . '" disabled>
+                                    <input type="number" id="quantity_' . $productId . '" class="form-control product-quantity" name="products[' . $productId . ']" value="' . $quantityValue . '" min="1" max="' . $availableQuantity . '" ' . $disabled . '>
                                     <span id="total_' . $productId . '" class="product-total">Total: 0 EGP</span>
                                 </div>
                             </div>
@@ -87,53 +94,88 @@
     document.addEventListener('DOMContentLoaded', function() {
         const productCheckboxes = document.querySelectorAll('.product-checkbox');
         const totalPriceInput = document.getElementById('totalPrice');
+        const submitButton = document.querySelector('button[type="submit"]');
         let overallTotal = 0;
 
-        // Loop through each checkbox to add event listeners
-        productCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const productId = this.dataset.id;
-                const productPrice = parseInt(this.dataset.price);
-                const availableQuantity = parseInt(this.dataset.quantity);
-                const quantityInput = document.getElementById('quantity_' + productId);
-                const totalElement = document.getElementById('total_' + productId);
+        function updateOverallTotal() {
+            overallTotal = Array.from(productCheckboxes).reduce((acc, cb) => {
+                const id = cb.dataset.id;
+                if (cb.checked) {
+                    const qty = parseInt(document.getElementById('quantity_' + id).value) || 0;
+                    acc += qty * parseInt(cb.dataset.price);
+                }
+                return acc;
+            }, 0);
+            totalPriceInput.value = `${overallTotal} EGP`;
+        }
 
-                // Enable quantity input when product is selected
+        productCheckboxes.forEach(checkbox => {
+            const productId = checkbox.dataset.id;
+            const productPrice = parseInt(checkbox.dataset.price);
+            const availableQuantity = parseInt(checkbox.dataset.quantity);
+            const quantityInput = document.getElementById('quantity_' + productId);
+            const totalElement = document.getElementById('total_' + productId);
+
+            // Disable quantity input initially if the product is not selected
+            quantityInput.disabled = !checkbox.checked;
+
+            // Handle checkbox state changes
+            checkbox.addEventListener('change', function() {
                 if (this.checked) {
                     quantityInput.disabled = false;
-                    quantityInput.value = 1;
-                    totalElement.textContent = 'Total: ' + productPrice + ' EGP';
-                    overallTotal += productPrice;
+                    quantityInput.value = 1; // Set to minimum when checked
+                    totalElement.textContent = `Total: ${productPrice} EGP`;
                 } else {
                     quantityInput.disabled = true;
-                    overallTotal -= parseInt(totalElement.textContent.split(' ')[1]);
+                    quantityInput.value = 0;
                     totalElement.textContent = 'Total: 0 EGP';
-                    quantityInput.value = 1;
                 }
-
-                // Update the overall total price displayed
-                totalPriceInput.value = overallTotal + ' EGP';
+                updateOverallTotal();
             });
 
-            // Update total when the quantity changes
-            const quantityInput = document.getElementById('quantity_' + checkbox.dataset.id);
+            // Quantity input change
             quantityInput.addEventListener('input', function() {
                 if (checkbox.checked) {
-                    const quantity = parseInt(this.value) || 0;
-                    const total = quantity * parseInt(checkbox.dataset.price);
-                    document.getElementById('total_' + checkbox.dataset.id).textContent = 'Total: ' + total + ' EGP';
+                    let quantity = parseInt(this.value) || 0;
 
-                    // Recalculate the overall total price
-                    overallTotal = Array.from(productCheckboxes).reduce((acc, cb) => {
-                        const id = cb.dataset.id;
-                        if (cb.checked) {
-                            const qty = parseInt(document.getElementById('quantity_' + id).value) || 0;
-                            acc += qty * parseInt(cb.dataset.price);
-                        }
-                        return acc;
-                    }, 0);
+                    // Constrain the quantity to available stock and minimum 1
+                    if (quantity > availableQuantity) {
+                        quantity = availableQuantity;
+                        this.value = availableQuantity;
+                    } else if (quantity < 1) {
+                        quantity = 1;
+                        this.value = 1;
+                    }
 
-                    totalPriceInput.value = overallTotal + ' EGP';
+                    const total = quantity * productPrice;
+                    totalElement.textContent = `Total: ${total} EGP`;
+                    updateOverallTotal();
+                }
+            });
+
+            // Prevent non-numeric input
+            quantityInput.addEventListener('keypress', function(event) {
+                if (!/^\d+$/.test(event.key)) {
+                    event.preventDefault();
+                }
+            });
+        });
+
+        // Ensure at least one product is selected before allowing form submission
+        document.getElementById('invoiceForm').addEventListener('submit', function(event) {
+            const hasSelectedProduct = Array.from(productCheckboxes).some(checkbox => checkbox.checked);
+
+            if (!hasSelectedProduct) {
+                event.preventDefault();
+                alert("Please select at least one product to create an invoice.");
+                return false;
+            }
+
+            // Set unchecked product quantities to 0 before submission
+            productCheckboxes.forEach(checkbox => {
+                if (!checkbox.checked) {
+                    const productId = checkbox.dataset.id;
+                    document.getElementById('quantity_' + productId).value = 0;
                 }
             });
         });

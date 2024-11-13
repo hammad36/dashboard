@@ -36,7 +36,7 @@ class indexController extends abstractController
     private function fetchLastProduct()
     {
         return $this->handleRequest(function () {
-            $lastProduct = productModel::getLastAddedElement();
+            $lastProduct = productModel::getLastAddedElement('pro_id', 'DESC');
             if (!$lastProduct) {
                 error_log("No recent product found in fetchLastProduct().");
             }
@@ -61,7 +61,7 @@ class indexController extends abstractController
     private function fetchLastInvoice()
     {
         return $this->handleRequest(function () {
-            $lastInvoice = invoiceModel::getLastAddedElement();
+            $lastInvoice = invoiceModel::getLastAddedElement('inv_number', 'DESC');
             if (!$lastInvoice) {
                 error_log("No recent invoice found in fetchLastInvoice().");
             }
