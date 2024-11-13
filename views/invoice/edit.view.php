@@ -8,8 +8,9 @@
     ?>
 
     <!-- Back button -->
-    <div class="btns text-right mb-3">
-        <a href="/invoice" class="btn btn-dark">Back to Invoice List</a>
+    <div class="text-right mb-3">
+        <a href="/invoice" class="btn btn-dark">
+            <i class="fas fa-arrow-left"></i> Back to Invoice List</a>
     </div>
 
     <h1 class="title text-center mb-4 animate__animated animate__fadeIn">Edit Invoice</h1>
@@ -51,7 +52,7 @@
                         $availableQuantity = $availableQuantities[$productId] ?? 0;
 
                         $checked = isset($selectedProducts[$productId]) ? 'checked' : '';
-                        $selectedQuantity = $checked ? $selectedProducts[$productId] : 0;
+                        $selectedQuantity = $checked ? $selectedProducts[$productId] : 1;
                         $disabled = $availableQuantity == 0 ? 'disabled' : '';
 
                         echo '
@@ -126,18 +127,33 @@
             function updateTotal() {
                 let overallTotal = 0;
 
+                // Check if there are any checkboxes checked, and if so, update the total
+                let anyProductChecked = false;
+
                 productCheckboxes.forEach(cb => {
                     const id = cb.dataset.id;
                     const price = parseInt(cb.dataset.price);
                     const qty = parseInt(document.getElementById('quantity_' + id).value) || 0;
-                    const lineTotal = qty * price;
 
-                    document.getElementById('total_' + id).textContent = 'Total: ' + lineTotal + ' EGP';
-                    overallTotal += lineTotal;
+                    if (cb.checked) {
+                        anyProductChecked = true; // At least one product is selected
+                        const lineTotal = qty * price;
+                        document.getElementById('total_' + id).textContent = 'Total: ' + lineTotal + ' EGP';
+                        overallTotal += lineTotal; // Accumulate total price
+                    } else {
+                        document.getElementById('total_' + id).textContent = 'Total: 0 EGP'; // Set to 0 when unchecked
+                    }
                 });
 
+                // If no products are checked, ensure the total is reset to 0
+                if (!anyProductChecked) {
+                    overallTotal = 0;
+                }
+
+                // Update the total price input with the overall total
                 totalPriceInput.value = overallTotal + ' EGP';
             }
+
         });
     });
 </script>

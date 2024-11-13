@@ -86,7 +86,7 @@ class invoiceModel extends abstractModel
             // Loop through each product and insert it into the invoice_product table
             foreach ($productData as $product) {
                 $query = "INSERT INTO invoice_product (inv_number, pro_id, quantity, line_total) 
-                          VALUES (?, ?, ?, ?)";
+                        VALUES (?, ?, ?, ?)";
                 $stmt = $db->prepare($query);
                 $stmt->execute([
                     $inv_number,

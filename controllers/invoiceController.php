@@ -43,8 +43,6 @@ class invoiceController extends abstractController
         $this->_view();
     }
 
-
-
     public function editAction()
     {
         $id = $this->filterInt($this->_params[0]);
@@ -109,8 +107,6 @@ class invoiceController extends abstractController
         }
     }
 
-
-
     public function deleteAction()
     {
         $id = $this->filterInt($this->_params[0]);
@@ -121,8 +117,6 @@ class invoiceController extends abstractController
             $this->alertHandler->redirectWithMessage("/invoice", "error", "invoice deletion failed.");
         }
     }
-
-
 
     private function handleInvoiceForm()
     {
@@ -167,8 +161,9 @@ class invoiceController extends abstractController
         // Validate products and calculate line totals
         $productData = $this->validateProductSelection($_POST['products']);
 
-        if (!$client_name || !$client_email || !$inv_date || empty($productData)) {
-            throw new \Exception('Invalid input data.');
+        // Ensure at least one product is selected
+        if (empty($productData)) {
+            throw new \Exception('Please select at least one product to create an invoice.');
         }
 
         return [$client_name, $client_email, $inv_date, $productData];
@@ -184,11 +179,20 @@ class invoiceController extends abstractController
     private function validateProductSelection($productIds)
     {
         $productData = [];
+        $invoiceTotal = 0;
 
         foreach ($productIds as $productId => $quantity) {
             $product = productModel::getByPK($productId);
             if ($product && is_numeric($quantity) && $quantity > 0) {
+                $availableQuantity = (new invoiceModel())->getAvailableQuantity($productId);
+
+                if ($quantity > $availableQuantity) {
+                    throw new \Exception("Selected quantity for {$product->pro_name} exceeds available stock.");
+                }
+
                 $line_total = $product->pro_price * $quantity;
+                $invoiceTotal += $line_total;
+
                 $productData[] = [
                     'pro_id' => $productId,
                     'quantity' => $quantity,
@@ -197,6 +201,10 @@ class invoiceController extends abstractController
             } else {
                 throw new \Exception("Invalid product selection or quantity for product ID: {$productId}");
             }
+        }
+
+        if ($invoiceTotal <= 0) {
+            throw new \Exception('Total price must be greater than zero.');
         }
 
         return $productData;

@@ -8,8 +8,9 @@
     ?>
 
     <!-- Back button -->
-    <div class="btns text-right mb-3">
-        <a href="/invoice" class="btn btn-dark">Back to Invoice List</a>
+    <div class="text-right mb-3">
+        <a href="/invoice" class="btn btn-dark">
+            <i class="fas fa-arrow-left"></i> Back to Invoice List</a>
     </div>
 
     <h1 class="title text-center mb-4 animate__animated animate__fadeIn">Create New Invoice</h1>
@@ -127,7 +128,7 @@
                     totalElement.textContent = `Total: ${productPrice} EGP`;
                 } else {
                     quantityInput.disabled = true;
-                    quantityInput.value = 0;
+                    quantityInput.value = 1;
                     totalElement.textContent = 'Total: 0 EGP';
                 }
                 updateOverallTotal();

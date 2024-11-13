@@ -15,8 +15,12 @@ trait InputFilter
 
     public function filterInt($input): ?int
     {
-        return $this->applyFilter($input, FILTER_SANITIZE_NUMBER_INT, fn($filtered) => is_numeric($filtered) && (int)$filtered >= 0);
+        if (is_numeric($input) && (int)$input >= 0 && (int)$input <= 3000000) {
+            return (int)$input;
+        }
+        return null;
     }
+
 
     public function filterFloat($input): ?float
     {
