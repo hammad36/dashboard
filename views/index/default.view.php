@@ -3,7 +3,6 @@
 
     <div class="container-fluid">
         <div class="row mb-4">
-            <!-- Welcome Section -->
             <div class="row justify-content-center mb-4">
                 <div class="col-md-8 text-center">
                     <h1 class="display-12 fw-bold">Welcome to Your Dashboard</h1>
@@ -11,7 +10,6 @@
                 </div>
             </div>
 
-            <!-- Overview Cards for Total Products & Invoices -->
             <div class="container-cards">
                 <div class="row justify-content-center mb-4">
                     <div class="col-md-6 mb-4">
@@ -43,13 +41,11 @@
                 </div>
             </div>
 
-            <!-- Recent Activities Section -->
             <div class="row justify-content-center recent-activities">
                 <div class="col-md-10 col-lg-8 mb-4">
                     <div class="card p-4 shadow-sm">
                         <h5 class="mb-3">Recent Activities</h5>
                         <ul class="list-group list-group-flush">
-                            <!-- Recent Product Activity -->
                             <?php if (!empty($this->_data['lastProduct'])): ?>
                                 <li class="list-group-item">
                                     <?php
@@ -62,7 +58,6 @@
                                 <li class="list-group-item">No recent products added.</li>
                             <?php endif; ?>
 
-                            <!-- Recent Invoice Activity -->
                             <?php if (!empty($this->_data['lastInvoice'])): ?>
                                 <li class="list-group-item">
                                     <?php
@@ -83,3 +78,18 @@
         </div>
     </div>
 </div>
+<script>
+    document.getElementById("sidebarCollapse").addEventListener("click", function() {
+        const sidebar = document.getElementById("sidebar");
+        const content = document.getElementById("content");
+
+        sidebar.classList.toggle("active");
+
+        // Adjust the content margin based on sidebar state
+        if (sidebar.classList.contains("active")) {
+            content.style.marginLeft = "0"; // If active, no margin
+        } else {
+            content.style.marginLeft = "250px"; // Reset margin for visible sidebar
+        }
+    });
+</script>

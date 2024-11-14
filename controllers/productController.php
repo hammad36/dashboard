@@ -41,15 +41,13 @@ class productController extends abstractController
             $this->alertHandler->redirectWithMessage("/product", "error", "Please re-enter valid values and try again.");
         }
 
-        // Show the product data for editing
         $this->_data['product'] = $product;
 
         if (isset($_POST['submit'])) {
-            // Call the handleProductForm method to update the product
             $this->handleProductForm($product, "Product updated successfully.", "edit", "edit");
         }
 
-        $this->_view(); // Render the edit view with the product data
+        $this->_view();
     }
 
 
@@ -70,13 +68,11 @@ class productController extends abstractController
         try {
             list($pro_name, $pro_description, $pro_price, $pro_quantity) = $this->validateProductInputs();
 
-            // Update product fields
             $product->setProName($pro_name);
             $product->setDescription($pro_description);
             $product->setProPrice($pro_price);
             $product->setProQuantity($pro_quantity);
 
-            // Save the updated product to the database
             if ($product->save()) {
                 $this->alertHandler->redirectWithMessage("/product", $alertType, $successMessage);
             }

@@ -4,5 +4,8 @@ namespace dash\controllers;
 
 class notFoundController extends abstractController
 {
-    public function delfautAction() {}
+    public function notFoundAction()
+    {
+        $this->_view();
+    }
 }

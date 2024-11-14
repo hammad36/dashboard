@@ -1,9 +1,7 @@
-/* Wrapper Layout */
 .wrapper {
     display: flex;
 }
 
-/* Sidebar Styling */
 #sidebar {
     position: fixed;
     top: 0;
@@ -20,13 +18,11 @@
     z-index: 1000;
 }
 
-/* Hide sidebar when active */
 #sidebar.active {
     transform: translateX(-250px);
     opacity: 0;
 }
 
-/* Sidebar Header */
 #sidebar .sidebar-header {
     padding: 20px;
     background-color: #3c4045;
@@ -52,7 +48,6 @@
     font-weight: bold;
 }
 
-/* Sidebar Navigation */
 #sidebar ul.components {
     display: flex;
     flex-direction: column;
@@ -69,7 +64,6 @@
     text-align: start;
 }
 
-/* Sidebar Links Hover Effect */
 #sidebar ul li a:hover {
     background-color: #575757;
     color: #fff;
@@ -81,7 +75,6 @@
     color: #fff;
 }
 
-/* Main Content Styling */
 #content {
     margin-left: 250px;
     padding: 20px;
@@ -90,41 +83,34 @@
     width: 100%;
 }
 
-/* Card Styling for Total Products and Total Invoices */
 .container-cards .card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Hover Effect for Total Products and Total Invoices */
 .container-cards .card:hover {
-    transform: scale(1.03); /* Slightly increase size on hover */
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15); /* Add a subtle shadow effect */
+    transform: scale(1.03);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
 
-/* Styling for Recent Activities Card */
 .recent-activities .card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Hover Effect for Recent Activities */
 .recent-activities .card:hover {
-    transform: scale(1.03); /* Slightly increase size on hover */
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15); /* Add a subtle shadow effect */
+    transform: scale(1.03);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
 
-/* Navbar Styling */
 .navbar {
     padding: 10px 20px;
     background-color: #fff;
     border-bottom: 1px solid #ddd;
 }
 
-/* Lead Text Styling */
 .lead {
     font-size: 1rem;
 }
 
-/* Footer Styling */
 footer {
     background-color: #f8f9fa;
     padding: 10px 20px;
@@ -133,7 +119,6 @@ footer {
     position: relative;
 }
 
-/* Body Styling */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -141,7 +126,6 @@ body {
     background-color: #f4f4f4;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
     #sidebar {
         transform: translateX(-250px);

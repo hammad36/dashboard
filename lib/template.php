@@ -105,9 +105,15 @@ class template
             //     }
             // }
             // Generate JS links
+            // $js = $resources['js'];
+            // foreach ($js as $jsKey => $path) {
+            //     $output .= '<script src="' . $path . '"><script/>';
+            // }
             $js = $resources['js'];
             foreach ($js as $jsKey => $path) {
-                $output .= '<script src="' . $path . '"><script/>';
+                if ($jsKey === ':view') {
+                    $output .= '<script src="' . $path . '">';
+                }
             }
         }
         echo $output;

@@ -39,13 +39,12 @@ abstract class abstractModel
     protected function bindValues(\PDOStatement &$stmt)
     {
         foreach (static::$tableSchema as $columnName => $type) {
-            // Check if a getter method exists for the column and use it
-            $getterMethod = 'get' . ucfirst($columnName); // Generate the getter method name
+            $getterMethod = 'get' . ucfirst($columnName);
 
             if (method_exists($this, $getterMethod)) {
                 $value = $this->$getterMethod();
             } else {
-                $value = $this->$columnName; // Direct access if no getter method
+                $value = $this->$columnName;
             }
 
             if ($type === self::DATA_TYPE_DECIMAL) {
@@ -176,9 +175,6 @@ abstract class abstractModel
     }
 
 
-
-
-    // New Method: Get count of all rows in a table
     public static function countAll()
     {
         return self::executeWithConnection(function ($connection) {
@@ -190,7 +186,6 @@ abstract class abstractModel
         });
     }
 
-    // New Method: Get count of rows that meet specific criteria
     public static function countWhere($condition, $params = [])
     {
         return self::executeWithConnection(function ($connection) use ($condition, $params) {
@@ -207,7 +202,6 @@ abstract class abstractModel
         });
     }
 
-    // New Method: Execute custom SQL queries
     public static function executeQuery($sql, $params = [])
     {
         return self::executeWithConnection(function ($connection) use ($sql, $params) {

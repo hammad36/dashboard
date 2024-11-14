@@ -8,13 +8,10 @@
     $alertHandler->handleAlert();
 
     ?>
-
-    <!-- Add Invoice Button -->
     <div class="btn-container" style="display:flex; justify-content:flex-end; margin-bottom: 10px;">
         <a href="/invoice/add" class="btn btn-dark btn-enhanced">Add New Invoice</a>
     </div>
 
-    <!-- Invoice Table -->
     <div class="table-responsive">
         <table class="table table-hover table-striped table-bordered text-center mt-3">
             <thead class="table-dark">
@@ -31,11 +28,11 @@
                 <?php if ($invoices !== false) : ?>
                     <?php foreach ($invoices as $inv) : ?>
                         <tr>
-                            <td><?= htmlspecialchars($inv->getInvNumber(), ENT_QUOTES, 'UTF-8') ?></td> <!-- Use getter for inv_number -->
-                            <td><?= htmlspecialchars($inv->getClientName(), ENT_QUOTES, 'UTF-8') ?></td> <!-- Use getter for client_name -->
-                            <td><?= htmlspecialchars($inv->getClientEmail(), ENT_QUOTES, 'UTF-8') ?></td> <!-- Use getter for client_email -->
-                            <td><?= htmlspecialchars($inv->getInvDate(), ENT_QUOTES, 'UTF-8') ?></td> <!-- Use getter for inv_date -->
-                            <td><?= htmlspecialchars($inv->getTotalAmount(), ENT_QUOTES, 'UTF-8') ?></td> <!-- Use getter for total_amount -->
+                            <td><?= htmlspecialchars($inv->getInvNumber(), ENT_QUOTES, 'UTF-8') ?></td>
+                            <td><?= htmlspecialchars($inv->getClientName(), ENT_QUOTES, 'UTF-8') ?></td>
+                            <td><?= htmlspecialchars($inv->getClientEmail(), ENT_QUOTES, 'UTF-8') ?></td>
+                            <td><?= htmlspecialchars($inv->getInvDate(), ENT_QUOTES, 'UTF-8') ?></td>
+                            <td><?= htmlspecialchars($inv->getTotalAmount(), ENT_QUOTES, 'UTF-8') ?></td>
                             <td class="action-cell" style="display: flex; justify-content: space-around; align-items: center;">
                                 <a href="/invoice/edit/<?= $inv->getInvNumber() ?>" class="link-dark">
                                     <i class="fa-solid fa-pen-to-square fs-5 me-3"></i>
@@ -76,6 +73,19 @@
 </div>
 
 <script>
+    document.getElementById("sidebarCollapse").addEventListener("click", function() {
+        const sidebar = document.getElementById("sidebar");
+        const content = document.getElementById("content");
+
+        sidebar.classList.toggle("active");
+
+        if (sidebar.classList.contains("active")) {
+            content.style.marginLeft = "0";
+        } else {
+            content.style.marginLeft = "250px";
+        }
+    });
+
     // Set delete link dynamically based on invoice number
     document.querySelectorAll('.delete-btn').forEach(button => {
         button.addEventListener('click', () => {

@@ -7,7 +7,6 @@
     $alertHandler->handleAlert();
     ?>
 
-    <!-- Back button -->
     <div class="text-right mb-3">
         <a href="/invoice" class="btn btn-dark">
             <i class="fas fa-arrow-left"></i> Back to Invoice List</a>
@@ -94,6 +93,19 @@
 </div>
 
 <script>
+    document.getElementById("sidebarCollapse").addEventListener("click", function() {
+        const sidebar = document.getElementById("sidebar");
+        const content = document.getElementById("content");
+
+        sidebar.classList.toggle("active");
+
+        if (sidebar.classList.contains("active")) {
+            content.style.marginLeft = "0";
+        } else {
+            content.style.marginLeft = "250px";
+        }
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
         const productCheckboxes = document.querySelectorAll('.product-checkbox');
         const totalPriceInput = document.getElementById('totalPrice');
@@ -105,29 +117,25 @@
             const quantityInput = document.getElementById('quantity_' + productId);
             const totalElement = document.getElementById('total_' + productId);
 
-            // Initialize for checked items
             if (checkbox.checked) {
                 quantityInput.disabled = false;
                 updateTotal();
             }
 
-            // Checkbox change event
             checkbox.addEventListener('change', function() {
                 quantityInput.disabled = !this.checked;
                 quantityInput.value = this.checked ? 1 : 0;
                 updateTotal();
             });
 
-            // Quantity input event
             quantityInput.addEventListener('input', function() {
-                if (parseInt(this.value) > maxAvailable) this.value = maxAvailable; // Cap input to available quantity
+                if (parseInt(this.value) > maxAvailable) this.value = maxAvailable;
                 updateTotal();
             });
 
             function updateTotal() {
                 let overallTotal = 0;
 
-                // Check if there are any checkboxes checked, and if so, update the total
                 let anyProductChecked = false;
 
                 productCheckboxes.forEach(cb => {
@@ -136,21 +144,19 @@
                     const qty = parseInt(document.getElementById('quantity_' + id).value) || 0;
 
                     if (cb.checked) {
-                        anyProductChecked = true; // At least one product is selected
+                        anyProductChecked = true;
                         const lineTotal = qty * price;
                         document.getElementById('total_' + id).textContent = 'Total: ' + lineTotal + ' EGP';
-                        overallTotal += lineTotal; // Accumulate total price
+                        overallTotal += lineTotal;
                     } else {
-                        document.getElementById('total_' + id).textContent = 'Total: 0 EGP'; // Set to 0 when unchecked
+                        document.getElementById('total_' + id).textContent = 'Total: 0 EGP';
                     }
                 });
 
-                // If no products are checked, ensure the total is reset to 0
                 if (!anyProductChecked) {
                     overallTotal = 0;
                 }
 
-                // Update the total price input with the overall total
                 totalPriceInput.value = overallTotal + ' EGP';
             }
 

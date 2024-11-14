@@ -41,7 +41,6 @@ class productModel extends abstractModel
         return $this->$prop;
     }
 
-    // Setter methods with input filtering and alert handling (unchanged)
     public function setProName($pro_name)
     {
         $filteredName = $this->filterString($pro_name, 1, 255);
@@ -78,7 +77,6 @@ class productModel extends abstractModel
         $this->pro_quantity = $filteredQuantity;
     }
 
-    // Getter methods for product attributes
     public function getProId()
     {
         return $this->pro_id;
@@ -99,7 +97,6 @@ class productModel extends abstractModel
         return $this->pro_quantity;
     }
 
-    // Method to retrieve available quantity (unchanged)
     public static function getAvailableQuantity($pro_id)
     {
         $sql = "SELECT pro_quantity FROM " . self::$tableName . " WHERE pro_id = :pro_id";
@@ -107,7 +104,6 @@ class productModel extends abstractModel
         return $result ? $result[0]->pro_quantity : null;
     }
 
-    // Method to reduce quantity (unchanged)
     public static function reduceQuantity($pro_id, $quantity)
     {
         $availableQuantity = self::getAvailableQuantity($pro_id);

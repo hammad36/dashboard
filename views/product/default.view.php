@@ -7,12 +7,10 @@
     alertHandler::getInstance()->handleAlert();
     ?>
 
-    <!-- Add Product Button -->
     <div class="btn-container" style="display:flex; justify-content:flex-end; margin-bottom: 10px;">
         <a href="/product/add" class="btn btn-dark btn-enhanced">Add New Product</a>
     </div>
 
-    <!-- Product Table -->
     <div class="table-responsive">
         <table class="table table-hover table-striped table-bordered text-center mt-3">
             <thead class="table-dark">
@@ -53,7 +51,6 @@
     </div>
 </div>
 
-<!-- Bootstrap Modal for Delete Confirmation -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -73,7 +70,19 @@
 </div>
 
 <script>
-    // Set delete link dynamically based on product ID
+    document.getElementById("sidebarCollapse").addEventListener("click", function() {
+        const sidebar = document.getElementById("sidebar");
+        const content = document.getElementById("content");
+
+        sidebar.classList.toggle("active");
+
+        if (sidebar.classList.contains("active")) {
+            content.style.marginLeft = "0";
+        } else {
+            content.style.marginLeft = "250px";
+        }
+    });
+
     document.querySelectorAll('.delete-btn').forEach(button => {
         button.addEventListener('click', () => {
             const productId = button.getAttribute('data-id');

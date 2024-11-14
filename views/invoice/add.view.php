@@ -7,7 +7,6 @@
     $alertHandler->handleAlert();
     ?>
 
-    <!-- Back button -->
     <div class="text-right mb-3">
         <a href="/invoice" class="btn btn-dark">
             <i class="fas fa-arrow-left"></i> Back to Invoice List</a>
@@ -39,7 +38,6 @@
             <h3 class="text-center mb-4 animate__animated animate__fadeIn">Select Products</h3>
             <div class="row">
                 <?php
-                // Fetch products and available quantities passed from the controller
                 $products = $this->_data['products'];
                 $availableQuantities = $this->_data['availableQuantities'];
 
@@ -50,7 +48,6 @@
                         $productPrice = $product->getProPrice();
                         $availableQuantity = $availableQuantities[$productId] ?? 0;
 
-                        // If the product is out of stock, disable selection and set quantity to 0
                         $disabled = $availableQuantity == 0 ? 'disabled' : '';
                         $quantityValue = $availableQuantity == 0 ? 0 : 1;
 
@@ -92,6 +89,19 @@
 </div>
 
 <script>
+    document.getElementById("sidebarCollapse").addEventListener("click", function() {
+        const sidebar = document.getElementById("sidebar");
+        const content = document.getElementById("content");
+
+        sidebar.classList.toggle("active");
+
+        if (sidebar.classList.contains("active")) {
+            content.style.marginLeft = "0";
+        } else {
+            content.style.marginLeft = "250px";
+        }
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
         const productCheckboxes = document.querySelectorAll('.product-checkbox');
         const totalPriceInput = document.getElementById('totalPrice');
@@ -117,14 +127,12 @@
             const quantityInput = document.getElementById('quantity_' + productId);
             const totalElement = document.getElementById('total_' + productId);
 
-            // Disable quantity input initially if the product is not selected
             quantityInput.disabled = !checkbox.checked;
 
-            // Handle checkbox state changes
             checkbox.addEventListener('change', function() {
                 if (this.checked) {
                     quantityInput.disabled = false;
-                    quantityInput.value = 1; // Set to minimum when checked
+                    quantityInput.value = 1;
                     totalElement.textContent = `Total: ${productPrice} EGP`;
                 } else {
                     quantityInput.disabled = true;
@@ -134,12 +142,10 @@
                 updateOverallTotal();
             });
 
-            // Quantity input change
             quantityInput.addEventListener('input', function() {
                 if (checkbox.checked) {
                     let quantity = parseInt(this.value) || 0;
 
-                    // Constrain the quantity to available stock and minimum 1
                     if (quantity > availableQuantity) {
                         quantity = availableQuantity;
                         this.value = availableQuantity;
@@ -154,7 +160,6 @@
                 }
             });
 
-            // Prevent non-numeric input
             quantityInput.addEventListener('keypress', function(event) {
                 if (!/^\d+$/.test(event.key)) {
                     event.preventDefault();
@@ -162,7 +167,6 @@
             });
         });
 
-        // Ensure at least one product is selected before allowing form submission
         document.getElementById('invoiceForm').addEventListener('submit', function(event) {
             const hasSelectedProduct = Array.from(productCheckboxes).some(checkbox => checkbox.checked);
 
@@ -172,7 +176,6 @@
                 return false;
             }
 
-            // Set unchecked product quantities to 0 before submission
             productCheckboxes.forEach(checkbox => {
                 if (!checkbox.checked) {
                     const productId = checkbox.dataset.id;

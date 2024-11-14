@@ -75,7 +75,7 @@ class indexController extends abstractController
             return $callback();
         } catch (\Exception $e) {
             error_log("$errorMsg: " . $e->getMessage());
-            return null;  // Return a default value to avoid breaking flow
+            return null;
         }
     }
 }

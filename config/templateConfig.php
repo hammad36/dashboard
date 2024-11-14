@@ -17,13 +17,13 @@ return [
             'productStyles' => CSS . 'productStyles.css',
             'invoiceStyles' => CSS . 'invoiceStyles.css',
             'style'         => CSS . 'style.css'
-        ]
-    ],
+        ],
 
+    ],
     'footer_resources' => [
+
         'js' => [
-            'product'       => JS . 'product.js',
-            'index'         => JS . 'index.js'
+            'index'       => JS . 'index.js',
         ]
     ]
 

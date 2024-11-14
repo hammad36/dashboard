@@ -22,13 +22,11 @@ class alertHandler
         return self::$instance;
     }
 
-    // Sanitize alert message
     private function sanitize($data)
     {
         return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
     }
 
-    // Display alert with type and message
     public function displayAlert($type, $message)
     {
         if (!isset($this->alertTypes[$type])) return;
@@ -41,7 +39,6 @@ class alertHandler
             </div>';
     }
 
-    // Handle alert display based on URL params
     public function handleAlert()
     {
         foreach ($this->alertTypes as $type => $alertClass) {
@@ -51,7 +48,6 @@ class alertHandler
         }
     }
 
-    // Helper method for redirect with a message
     public function redirectWithMessage($path, $type, $message)
     {
         session_write_close();
