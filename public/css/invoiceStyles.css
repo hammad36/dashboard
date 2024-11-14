@@ -1,0 +1,261 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+nav {
+    background-color: #333;
+    padding: 15px 0;
+    text-align: center;
+}
+
+.mp {
+    color: #fff;
+    font-size: 24px;
+    margin: 0;
+    animation: fadeInDown 1s ease-in-out;
+}
+
+.container {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 1100px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 1s ease-in-out;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.title {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.description {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #666;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.formInt {
+    margin-top: 20px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.column {
+    flex: 1;
+    min-width: 200px;
+    margin-right: 10px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="email"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    table {
+        font-size: 12px;
+    }
+
+    table td {
+        padding: 8px;
+    }
+
+    table th {
+        font-size: 13px;
+    }
+}
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: #343a40;
+    color: #fff;
+    transition: margin-left 0.3s ease;
+    padding-top: 20px;
+    overflow-y: auto;
+}
+
+#sidebar.active {
+    margin-left: -250px; 
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background-color: #3c4045;
+    text-align: center;
+}
+
+#sidebar .sidebar-header img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+#sidebar .username {
+    margin-top: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* Sidebar Navigation */
+#sidebar ul.components {
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+}
+
+#sidebar ul li a {
+    padding: 15px 30px;
+    font-size: 1.1em;
+    color: #ddd;
+    display: block;
+    text-decoration: none;
+    transition: background 0.3s ease, color 0.3s ease;
+    text-align: start;
+}
+
+#sidebar ul li a:hover {
+    background-color: #575757;
+    color: #fff;
+}
+
+/* Product Card Styles */
+.product-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-body {
+    text-align: center;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.card-text {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.form-check-label {
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.product-quantity {
+    margin-top: 10px;
+}
+
+.product-total {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.btn:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.product-total {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.animate__animated.animate__fadeIn {
+    animation-duration: 1s;
+}
+
+.animate__animated.animate__zoomIn {
+    animation-duration: 1.5s;
+}

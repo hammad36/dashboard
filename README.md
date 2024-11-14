@@ -1,11 +1,13 @@
 # 🧾 Dashboard Features
 
 ## Live Demo
+
 Check out the live version of the project [here!](http://hammad.wuaze.com/)
 
 ---
 
 ## 📋 Invoice Management
+
 - **Create** new invoices easily.
 - **Edit** existing invoices with a few clicks.
 - **Delete** invoices that are no longer needed.
@@ -17,6 +19,7 @@ Check out the live version of the project [here!](http://hammad.wuaze.com/)
 ---
 
 ## 🛒 Product Management
+
 - **Add** new products to your catalog.
 - **Edit** product details as needed.
 - **Delete** products that are no longer in stock.
@@ -28,6 +31,7 @@ Check out the live version of the project [here!](http://hammad.wuaze.com/)
 ---
 
 ## 📄 Invoice Details
+
 - Seamlessly include multiple products in each invoice.
 - Select products from an easy-to-navigate product list.
 - Automatically calculate and display the total amount based on selected products and their quantities.
